@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Registrar</title>
+</head>
+<body>
+    <header>
+        <div class='container'>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg" class='logo-img'></img>
+            <p class='center-title'>Registrar-se</p> <!-- Adicionado -->
+            <strong><nav>
+                <ul class='menu'>
+                    <li><a href="{{ url_for('home') }}">Início</a></li>
+                    <li><a href="{{ url_for('login') }}">Fazer login</a></li>
+                </ul>
+            </nav></strong>
+        </div>
+    </header>
+    <div class="form-container">
+        <form action="" method="post">
+            <p> Faça seu registro</p>
+            <input type="text" name="nomeForm" placeholder="Nome" required><br>
+            <input type="password" name="senhaForm" placeholder="Senha" required><br>
+            <input type="submit" value="Cadastrar">
+        </form>
+    </div>
+</body>
+</html>
