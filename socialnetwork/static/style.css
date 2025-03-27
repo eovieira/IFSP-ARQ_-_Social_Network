@@ -1,0 +1,507 @@
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+header {
+    padding: 1vh 0;
+    background-color: rgb(50, 177, 50);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Container do Carrossel */
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 2rem 0;
+    padding: 20px 0;
+}
+
+/* Carrossel Principal */
+.carousel {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    height: 500px; /* Altura fixa */
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+}
+
+/* Área das Imagens */
+.carousel-inner {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Estilo das Imagens */
+.carousel-inner img {
+    min-width: 100%;
+    object-fit: contain;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+/* Controles de Navegação */
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(50, 177, 50, 0.8);
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 1.8rem;
+    border-radius: 50%;
+    z-index: 10;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+}
+
+.carousel-control:hover {
+    background-color: rgba(40, 150, 40, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-control.prev {
+    left: 20px;
+}
+
+.carousel-control.next {
+    right: 20px;
+}
+
+/* Indicadores */
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.carousel-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.carousel-indicator.active {
+    background-color: rgb(50, 177, 50);
+    transform: scale(1.3);
+}
+
+/* Estilos do Header (mantidos) */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 10px;
+    position: relative;
+}
+
+.center-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5vh;
+    font-weight: bold;
+    color: white;
+    white-space: nowrap;
+}
+
+.logo-img {
+    height: 6vh;
+    max-height: 50px;
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 2.5vh;
+}
+
+.menu li {
+    margin-left: 5vh;
+}
+
+.menu li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .carousel {
+        height: 400px;
+        width: 95%;
+    }
+    
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+        padding: 10px;
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel {
+        height: 300px;
+    }
+    
+    .carousel-control {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+    
+    .carousel-indicators {
+        bottom: 10px;
+    }
+}
+
+/* Outros estilos existentes (mantidos) */
+/* ... (mantenha todos os outros estilos que não estão relacionados ao carrossel) ... */
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 10px;
+    position: relative;
+}
+
+.center-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5vh;
+    font-weight: bold;
+    color: white;
+    white-space: nowrap;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5vh;
+}
+
+.logo-img {
+    height: 6vh;
+    max-height: 50px;
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 2.5vh;
+}
+
+.menu li {
+    margin-left: 5vh;
+}
+
+.menu li a {
+    color: white;
+    text-decoration: none;
+}
+
+.menu li a:hover {
+    color: rgb(196, 196, 196);
+    text-decoration: dotted;
+}
+
+.menu li .sair {
+    color: rgb(255, 103, 103)
+}
+
+.menu li .sair:hover {
+    color: rgb(209, 34, 34)
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 70px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.error-message{
+    color: rgb(255, 83, 83);
+    font-size: 2.5vh;
+    margin-bottom: 10px;
+}
+
+form {
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    border: 1px solid #ccc;
+}
+
+form input[type="submit"] {
+    background-color: rgb(50, 177, 50);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: rgb(40, 150, 40);
+}
+
+@media (max-width: 768px) {
+    .logo-img {
+        height: 5vh;
+    }
+
+    .center-title {
+        transform: translateX(-50%);
+        font-size: 2.2vh;
+    }
+
+    .menu {
+        font-size: 2.2vh;
+    }
+
+    .menu li {
+        margin-left: 3vh;
+    }
+
+    .header-left {
+        gap: 1vh;
+    }
+
+    form {
+        max-width: 80%;
+        padding: 12px 15px;
+    }
+
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="submit"] {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-img {
+        height: 4.5vh;
+    }
+
+    .center-title {
+        transform: translateX(-50%);
+        font-size: 1.8vh;
+    }
+
+    .menu {
+        font-size: 1.8vh;
+    }
+
+    .menu li {
+        margin-left: 1.5vh;
+    }
+
+    .container {
+        padding: 0 8px;
+    }
+
+    .error-message{
+        color: rgb(255, 83, 83);
+        font-size: 1.5vh;
+        margin-bottom: 10px;
+    }
+
+    form {
+        max-width: 95%;
+        padding: 10px 12px;
+    }
+
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="submit"] {
+        padding: 7px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 320px) {
+
+    .error-message{
+        color: rgb(255, 83, 83);
+        font-size: 1.5vh;
+        margin-bottom: 10px;
+    }
+
+    form {
+        max-width: 95%;
+        padding: 8px 10px;
+    }
+
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="submit"] {
+        font-size: 0.75rem;
+        padding: 6px;
+    }
+
+    .menu {
+        font-size: 1.5vh;
+    }
+
+    .menu li {
+        margin-left: 1vh;
+    }
+
+    .center-title {
+        font-size: 1.5vh;
+    }
+
+    .logo-img {
+        height: 4vh;
+    }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .form-container {
+        padding: 10px;
+    }
+    
+
+    form {
+        max-width: 60%;
+        padding: 10px 15px;
+    }
+
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="submit"] {
+        padding: 8px;
+        font-size: 0.8rem;
+        margin: 4px 0;
+    }
+
+    header {
+        padding: 0.5vh 0;
+    }
+
+    .logo-img {
+        height: 4vh;
+    }
+
+    .center-title {
+        font-size: 2vh;
+    }
+
+    .menu {
+        font-size: 1.8vh;
+    }
+
+    .menu li {
+        margin-left: 2vh;
+    }
+}
+
+@media (min-width: 769px) {
+
+    .error-message{
+        color: rgb(255, 83, 83);
+        font-size: 1.5vh;
+        margin-bottom: 10px;
+    }
+
+    .form-container {
+        padding: 20px 30px;
+    }
+
+    form {
+        padding: 20px 25px;
+    }
+
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="submit"] {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .logo-img {
+        height: 7vh;
+    }
+
+    .error-message{
+        color: rgb(255, 83, 83);
+        font-size: 1.5vh;
+        margin-bottom: 10px;
+    }
+
+    .menu {
+        font-size: 2.8vh;
+    }
+
+    .center-title {
+        font-size: 3vh;
+    }
+}
