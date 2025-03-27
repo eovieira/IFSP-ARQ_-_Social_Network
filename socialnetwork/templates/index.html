@@ -1,1 +1,27 @@
-
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <div class='container'>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg" class='logo-img'>
+            <p class='center-title'>Início</p>
+            <nav>
+                <ul class='menu'>
+                    {% if current_user.is_authenticated %}
+                        <li>{{current_user.nome}}</li>
+                        <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">Fazer login</a></li>
+                        <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+</body>
+</html>
