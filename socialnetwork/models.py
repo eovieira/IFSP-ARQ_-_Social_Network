@@ -8,4 +8,5 @@ class Usuario(UserMixin, db.Model):
     
     nome = db.Column(db.String(30), unique=True)
     senha = db.Column(db.String())
+    cargo = db.Column(db.String())
     

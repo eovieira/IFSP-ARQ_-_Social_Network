@@ -24,6 +24,44 @@ def user_loader(id):
 def home():
     return render_template('index.html')
 
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        nome = request.form['nomeForm']
+        senha = request.form['senhaForm']
+        
+        user = db.session.query(Usuario).filter_by(nome=nome, senha=hash(senha)).first()
+        if not user:
+            return render_template('login.html', error="Usuário ou senha incorretos, tente novamente!")
+        
+        login_user(user)
+        return redirect(url_for('home'))
+
+@app.route('/registrar', methods=['GET', 'POST'])
+def registrar():
+    if request.method == 'GET':
+        return render_template('registrar.html')
+    elif request.method == 'POST':
+        nome = request.form['nomeForm']
+        senha = request.form['senhaForm']
+        
+        novo_usuario = Usuario(nome=nome, senha=hash(senha), cargo='Usuário')
+        db.session.add(novo_usuario)
+        db.session.commit()
+        
+        login_user(novo_usuario)
+        
+        return redirect(url_for('home'))
+    
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+    
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
