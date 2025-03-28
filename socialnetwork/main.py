@@ -3,6 +3,7 @@ from flask_login import LoginManager, login_user, login_required, login_remember
 from models import Usuario
 from db import db
 import hashlib
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = 'b1b39f3b13f4d82f957ee82b2aff10ae7d5903aa1ab6baa6c77664f667dde823'
@@ -26,7 +27,8 @@ def home():
 
 @app.route('/usuarios')
 def usuarios():
-    return render_template('utils/users.html')
+    usuarios = db.session.query(Usuario).all()
+    return render_template('utils/users.html', usuarios=usuarios)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -77,7 +79,7 @@ def admin_panel():
     if current_user.cargo == 'Administrador':
         return render_template('admin_panel.html')
     else:
-        return render_template('home.html', error='Você não tem permissão para isso!')
+        return render_template('index.html', error='Você não tem permissão para isso!')
 
 if __name__ == '__main__':
     with app.app_context():

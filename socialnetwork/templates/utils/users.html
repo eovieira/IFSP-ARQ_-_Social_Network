@@ -1,11 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Painel de Administrador</title>
 </head>
 <body>
-    HELLO WORLD!
+    <header class="admin_panel">
+        <div class='container'>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg" class='logo-img'>
+            <p class='center-title'>Menu de Usuários</p>
+            <nav>
+                <ul class='menu'>
+                    {% if current_user.is_authenticated %}
+                        <li>@{{current_user.nome.lower()}}</li>
+                        <li><a href="{{ url_for('home') }}">Início</a>
+                        <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">Fazer login</a></li>
+                        <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+        <nav class="admin_nav">
+            <div>
+                <ul class="options">
+                    <li><a href="{{ url_for('admin_panel') }}">Painel de Administrador</a></li>
+                    <li><a href="">Denúncias</a></li>
+                    <li><a href="">Perfil</a></li><!--Padrão para todos os usuários-->
+                </ul>
+            </div>
+        </nav>
+        <div class="tabela">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome de cadastro</th>
+                        <th>Cargo</th>
+                        <th>Senha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.id }}</td>
+                        <td>{{ usuario.nome }}</td>
+                        <td>{{ usuario.cargo }}</td>
+                        <td>{{ usuario.senha }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 </body>
 </html>

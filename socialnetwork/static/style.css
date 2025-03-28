@@ -61,6 +61,7 @@ header {
 }
 
 .menu li {
+    font-weight: bold;
     margin-left: 5vh;
     color: white
 }
@@ -102,6 +103,12 @@ header {
 .options li a:hover {
     color: rgb(51, 50, 50);
     text-decoration: none;
+}
+
+.erro {
+    text-decoration: none;
+    color: red;
+    font-size: 2.5vh;
 }
 
 /* Media Queries para Responsividade */
