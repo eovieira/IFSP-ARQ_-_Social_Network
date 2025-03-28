@@ -135,9 +135,6 @@ header {
     }
 }
 
-/* Outros estilos existentes (mantidos) */
-/* ... (mantenha todos os outros estilos que não estão relacionados ao carrossel) ... */
-
 .container {
     display: flex;
     justify-content: space-between;

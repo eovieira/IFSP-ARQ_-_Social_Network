@@ -24,6 +24,10 @@ def user_loader(id):
 def home():
     return render_template('index.html')
 
+@app.route('/usuarios')
+def usuarios():
+    return render_template('utils/users.html')
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
