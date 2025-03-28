@@ -451,8 +451,8 @@ form input[type="submit"]:hover {
 .icon {
     width: 60px;
     height: 60px;
-    padding-left: 22vh;
-    padding-right: 23vh;
+    border-radius: 15px;
+    border: 2px solid black;
 }
 
 footer {
@@ -468,4 +468,20 @@ footer ul {
 
 footer ul li {
     display: inline;
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+@media (max-width: 768px) {
+    .icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+        border: 1px solid black;
+    }
+
+    footer ul li {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 }
