@@ -110,7 +110,7 @@ header {
         height: 400px;
         width: 95%;
     }
-    
+
     .carousel-control {
         width: 40px;
         height: 40px;
@@ -123,13 +123,13 @@ header {
     .carousel {
         height: 300px;
     }
-    
+
     .carousel-control {
         width: 35px;
         height: 35px;
         font-size: 1.2rem;
     }
-    
+
     .carousel-indicators {
         bottom: 10px;
     }
@@ -207,7 +207,7 @@ header {
     box-sizing: border-box;
 }
 
-.error-message{
+.error-message {
     color: rgb(255, 83, 83);
     font-size: 2.5vh;
     margin-bottom: 10px;
@@ -309,7 +309,7 @@ form input[type="submit"]:hover {
         padding: 0 8px;
     }
 
-    .error-message{
+    .error-message {
         color: rgb(255, 83, 83);
         font-size: 1.5vh;
         margin-bottom: 10px;
@@ -330,7 +330,7 @@ form input[type="submit"]:hover {
 
 @media (max-width: 320px) {
 
-    .error-message{
+    .error-message {
         color: rgb(255, 83, 83);
         font-size: 1.5vh;
         margin-bottom: 10px;
@@ -369,7 +369,7 @@ form input[type="submit"]:hover {
     .form-container {
         padding: 10px;
     }
-    
+
 
     form {
         max-width: 60%;
@@ -407,7 +407,7 @@ form input[type="submit"]:hover {
 
 @media (min-width: 769px) {
 
-    .error-message{
+    .error-message {
         color: rgb(255, 83, 83);
         font-size: 1.5vh;
         margin-bottom: 10px;
@@ -433,7 +433,7 @@ form input[type="submit"]:hover {
         height: 7vh;
     }
 
-    .error-message{
+    .error-message {
         color: rgb(255, 83, 83);
         font-size: 1.5vh;
         margin-bottom: 10px;
@@ -446,4 +446,26 @@ form input[type="submit"]:hover {
     .center-title {
         font-size: 3vh;
     }
+}
+
+.icon {
+    width: 60px;
+    height: 60px;
+    padding-left: 22vh;
+    padding-right: 23vh;
+}
+
+footer {
+    background-color: rgb(50, 177, 50);
+    padding: 0.8vh 0;
+    width: 100%;
+}
+
+footer ul {
+    list-style: none;
+    text-align: center;
+}
+
+footer ul li {
+    display: inline;
 }
