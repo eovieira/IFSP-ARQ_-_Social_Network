@@ -67,6 +67,13 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
     
+@app.route('/admin_panel')
+@login_required
+def admin_panel():
+    if current_user.cargo == 'Administrador':
+        return render_template('admin_panel.html')
+    else:
+        return render_template('home.html', error='Você não tem permissão para isso!')
 
 if __name__ == '__main__':
     with app.app_context():

@@ -16,9 +16,6 @@
                     {% if current_user.is_authenticated %}
                         <li>{{current_user.nome}}</li>
                         <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
-                        {% if current_user.cargo == 'Administrador' %}
-                            <li><a href="{{ url_for('admin_panel') }}">Painel de administrador</a></li>
-                        {% endif %}
                     {% else %}
                         <li><a href="{{ url_for('login') }}">Fazer login</a></li>
                         <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
