@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
     <title>Página Inicial</title>
 </head>
+
 <body>
+
     <header>
         <div class='container'>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg" class='logo-img'>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
+                class='logo-img'>
             <p class='center-title'>Início</p>
             <nav>
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
-                        <li>@{{current_user.nome.lower()}}</li>
-                        {% if current_user.cargo == 'Administrador' %}
-                            <li><a href="{{ url_for('admin_panel') }}">Painel de administrador</a></li>
-                        {% endif %}
-                        <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
+                    <li>@{{current_user.nome.lower()}}</li>
+                    {% if current_user.cargo == 'Administrador' %}
+                    <li><a href="{{ url_for('admin_panel') }}">Painel de administrador</a></li>
+                    {% endif %}
+                    <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
                     {% else %}
-                        <li><a href="{{ url_for('login') }}">Fazer login</a></li>
-                        <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
+                    <li><a href="{{ url_for('login') }}">Fazer login</a></li>
+                    <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
                     {% endif %}
                 </ul>
             </nav>
         </div>
     </header>
+
     <main>
         <div class="options">
 
         </div>
     </main>
+
 </body>
+
 </html>
