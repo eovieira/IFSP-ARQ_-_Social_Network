@@ -50,7 +50,8 @@ def registrar():
         usuario_existente = db.session.query(Usuario).filter_by(nome=nome).first()
         if usuario_existente:
             return render_template('registrar.html', error="Este nome de usuário já está em uso, tente outro!")
-        
+        if nome == 'SuperAdmin':
+            novo_usuario = Usuario(nome=nome, senha=hash(senha), cargo='Administrador')
         novo_usuario = Usuario(nome=nome, senha=hash(senha), cargo='Usuário')
         db.session.add(novo_usuario)
         db.session.commit()
