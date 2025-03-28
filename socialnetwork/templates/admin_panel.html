@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
-    <title>Document</title>
+    <title>Painel de Administrador</title>
 </head>
 <body>
-    <header>
+    <header class="admin_panel">
         <div class='container'>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg" class='logo-img'>
-            <p class='center-title'>Início</p>
+            <p class='center-title'>Painel de Administrador</p>
             <nav>
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
-                        <li>{{current_user.nome}}</li>
+                        <li>@{{current_user.nome.lower()}}</li>
+                        <li><a href="{{ url_for('home') }}">Início</a>
                         <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
                     {% else %}
                         <li><a href="{{ url_for('login') }}">Fazer login</a></li>
