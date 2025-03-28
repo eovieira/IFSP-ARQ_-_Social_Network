@@ -24,6 +24,11 @@
             <p> Faça seu registro</p>
             <input type="text" name="nomeForm" placeholder="Nome" required><br>
             <input type="password" name="senhaForm" placeholder="Senha" required><br>
+            {% if error %}
+            <div class="error-message">
+                *{{ error }}
+            </div>
+            {% endif %}
             <input type="submit" value="Cadastrar">
         </form>
     </div>
