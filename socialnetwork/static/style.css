@@ -455,6 +455,43 @@ form input[type="submit"]:hover {
     }
 }
 
+.tabela {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 70px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+table {
+    background-color: rgb(197, 197, 197);
+    margin-bottom: 135px;
+    font-size: 18px;
+    width: 100%;
+    height: 500px;
+    margin: 5%;
+}
+
+thead {
+    background-color: rgb(99, 99, 99);
+}
+
+thead tr {
+    text-shadow: 2px 2px 3px grey;
+}
+
+table tbody tr:hover {
+    background-color: rgb(106, 255, 106);
+}
+
+td,
+th {
+    text-align: center;
+    padding: 10px;
+}
+
 .icon {
     width: 60px;
     height: 60px;
