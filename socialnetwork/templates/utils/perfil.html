@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Perfil de {{user.username}}</title>
+    </head>
+    <body>
+        <h2>Perfil de {{ user.username }}</h2>
+        <h3>Usuários Seguidos:</h3>
+        <ul>
+            {% for seguido in seguindo %}
+                <li>{{ seguido.username }}</li>
+            {% endfor %}
+        </ul>
+        {% if user.id != current_user.id %}
+            {% if user in current_user.seguindo %}
+                <a href="{{ url_for('deixar_de_seguir', username=user.username) }}">Deixar de Seguir</a>
+            {% else %}
+                <a href="{{ url_for('seguir', username=user.username) }}">Seguir</a>
+            {% endif %}
+            <!-- {% if user in current_user.bloqueados %}
+                <a href="{{ url_for('desbloquear', username=user.username) }}">Desbloquear</a>
+            {% else %}
+                <a href="{{ url_for('bloquear', username=user.username) }}">Bloquear</a>
+            {% endif %} -->
+        {% endif %}
+        {% if current_user.id != user.id %}
+            <form id="form-seguir" action="{{ url_for('seguir_usuario', id_usuario=user.id) }}" method="POST">
+                <button type="submit" id="botao-seguir" class="btn btn-primary">
+                    {% if user in current_user.seguindo %}
+                        Deixar de seguir
+                    {% else %}
+                        Seguir
+                    {% endif %}
+                </button>
+            </form>
+        {% endif %}
+    </body>
+</html>

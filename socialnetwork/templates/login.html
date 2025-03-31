@@ -3,13 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/Logo_Instituto_Federal.png') }}">
         <link rel="stylesheet" href="../static/style.css">
         <title>Login</title>
     </head>
     <body>
         <header>
             <div class='container'>
-                <img class='logo-img' src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg">
+                <img class='logo-img' src="{{ url_for('static', filename='images/Logo_Instituto_Federal.png') }}">
                 <p class='center-title'>Fazer login</p> <!-- Adicionado -->
                 <strong>
                     <nav>
@@ -25,7 +26,7 @@
             <div class="form-container">
                 <form action="" method="post">
                     <p> Faça seu login</p>
-                    <input type="text" name="nomeForm" placeholder="Nome" required><br>
+                    <input type="text" name="usernameForm" placeholder="Nome de usuário" required><br>
                     <input type="password" name="senhaForm" placeholder="Senha" required><br>
                     {% if error %}
                     <div class="error-message">
