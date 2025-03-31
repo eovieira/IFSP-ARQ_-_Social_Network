@@ -6,4 +6,9 @@ run = "python socialnetwork/main.py"
 channel = "stable-24_05"
 
 [deployment]
-run =
+run = "python socialnetwork/main.py"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+exposeLocalhost = true
