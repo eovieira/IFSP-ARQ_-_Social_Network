@@ -1,5 +1,6 @@
+
 modules = ["web", "python-3.12"]
-run = "socialnetwork/main.py"
+run = "python socialnetwork/main.py"
 
 [nix]
 channel = "stable-24_05"
