@@ -4,17 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
     <title>Perfil de {{user.username}}</title>
 </head>
 
 <body>
-    <h2>Perfil de {{ user.username }}</h2>
+    <header>
+        <div class="container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
+                class='logo-img'>
+            <p class='center-title'>Perfil de {{ user.username }}</p>
+            <nav>
+                <ul class='menu'>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('perfil', username=current_user.username) }}">
+                            @{{current_user.username.lower()}}<a></a>
+                    </li>
+                    {% if current_user.cargo == 'Administrador' %}
+                    <li><a href="{{ url_for('admin_panel') }}">Painel de administrador</a></li>
+                    {% endif %}
+                    <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Fazer login</a></li>
+                    <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    {% if user.id == current_user.id %}
     <h3>Seguindo:</h3>
     <ul>
+        
         {% for seguido in seguindo %}
         <li>{{ seguido.username }}</li>
+        <form action="{{ url_for('deixar_de_seguir', username=seguido.username) }}" method="POST">
+            <button type=submit class="btn btn-primary">
+                {% if current_user.seguindo.filter_by(id_seguido=seguido.id).first() %}
+                Deixar de Seguir
+                {% endif %}
+            </button>
+        </form>
         {% endfor %}
     </ul>
+    {% endif %}
     {% if user.id != current_user.id %}
     <form action="{{ url_for('seguir_usuario', id_usuario=user.id) }}" method="POST">
         <button type="submit" class="btn btn-primary">

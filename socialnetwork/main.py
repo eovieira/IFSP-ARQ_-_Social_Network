@@ -144,13 +144,15 @@ def seguir(username):
     flash(f"Agora você segue {username}!", "success")
     return redirect(url_for('perfil', username=username))
 
-@app.route('/deixar_de_seguir/<username>')
+@app.route('/deixar_de_seguir/<username>', methods=['GET', 'POST'])
 @login_required
 def deixar_de_seguir(username):
     user = Usuario.query.filter_by(username=username).first()
+    
     if not user:
         flash('Usuário não encontrado', 'error')
         return redirect(url_for(home))
+    
     seguir_register = current_user.seguindo.filter_by(id_seguido=user.id).first()
     if seguir_register:
         db.session.delete(seguir_register)
@@ -158,7 +160,8 @@ def deixar_de_seguir(username):
         flash(f"Você deixou de seguir {username}.", "info")
     else:
         flash("Você não segue este usuário.", "error")
-    return redirect(url_for('perfil', username=username))
+        
+    return redirect(url_for('perfil', username=current_user.username if username != current_user.username else username))
 
 @app.route('/perfil/<username>')
 @login_required
