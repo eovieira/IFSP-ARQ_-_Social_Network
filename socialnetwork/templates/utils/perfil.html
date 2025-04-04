@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
     <title>
-        {% if user.bloqueados.filter_by(id_bloqueado=current_user.id).first() %}
+        {% if current_user_blocked %}
             Usuário não encontrado
         {% else %}
             Perfil de {{ user.username }}
@@ -20,7 +20,7 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
                 class='logo-img'>
             <p class='center-title'>
-                {% if user.bloqueados.filter_by(id_bloqueado=current_user.id).first() %}
+                {% if current_user_blocked %}
                     Usuário não encontrado
                 {% else %}
                     Perfil de {{ user.username }}
@@ -44,47 +44,113 @@
             </nav>
         </div>
     </header>
+
     <form>
-    {% if user.bloqueados.filter_by(id_bloqueado=current_user.id).first() %}
-    <p>As informações do usuário não podem ser exibidas</p>
-    {% elif current_user.bloqueados.filter_by(id_bloqueado=user.id).first() %}
-        <p>Seguidores: {{ quantia_seguidores }}, Seguindo: {{ quantia_seguindo }}</p>
-        <p>Você bloqueou {{ user.username }}</p>
-        <form>
-            <a href="{{ url_for('desbloquear', username=user.username)}}"><span id="unblock">Desbloquear</span></a>
-        </form>
-
-    {% else %}
-        <p>Seguidores: {{ quantia_seguidores }}, Seguindo: {{ quantia_seguindo }}</p>
-        {% if user.id != current_user.id %}
-            
+        {% if current_user_blocked %}
+        <p>As informações do usuário não podem ser exibidas</p>
+        {% elif current_user_is_blocking %}
+            <p>Seguidores: {{ quantia_seguidores }}, Seguindo: {{ quantia_seguindo }}</p>
+            <p>Você bloqueou {{ user.username }}</p>
+            <a href="{{ url_for('desbloquear', username=user.username) }}"><span id="unblock">Desbloquear</span></a>
+        {% else %}
+            <p>Seguidores: {{ quantia_seguidores }}, Seguindo: {{ quantia_seguindo }}</p>
+            {% if user.id != current_user.id %}
                 {% if current_user.seguindo.filter_by(id_seguido=user.id).first() %}
-                <a href="{{ url_for('deixar_de_seguir', username=user.username)}}">Deixar de seguir</a>
+                    <a href="{{ url_for('deixar_de_seguir', username=user.username) }}">Deixar de seguir</a>
                 {% else %}
-                <a href="{{ url_for('seguir', username=user.username)}}">Seguir</a>
+                    <a href="{{ url_for('seguir', username=user.username) }}">Seguir</a>
                 {% endif %}
-
-        {% if not current_user.bloqueados.filter_by(id_bloqueado=user.id).first() %}
-            <a href="{{ url_for('bloquear', username=user.username)}}"><span id="block">Bloquear</span></a>
+                {% if not current_user.bloqueados.filter_by(id_bloqueado=user.id).first() %}
+                    <a href="{{ url_for('bloquear', username=user.username) }}"><span id="block">Bloquear</span></a>
+                {% endif %}
+            {% endif %}
         
-        {% endif %}
-        {% endif %}
-        
-        <p>Seguindo:</p>
-        <ul class="seguindo">
-            {% for seguido in seguindo %}
-            <li>{{ seguido.username }}</li>
-            {% endfor %}
-        </ul>
+            <!-- Exibir Seguindo -->
+            <p>Seguindo:</p>
+            <ul class="seguindo">
+                {% for seguido in seguindo %}
+                    <li>{{ seguido.username }}</li>
+                {% endfor %}
+            </ul>
 
-        <p>Seguidores:</p>
-        <ul class="seguidores">
-            {% for seguidor in seguidores %}
-            <li>{{ seguidor.username }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+            <!-- Exibir Seguidores -->
+            <p>Seguidores:</p>
+            <ul class="seguidores">
+                {% for seguidor in seguidores %}
+                    <li>{{ seguidor.username }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </form>
+
+    {% if not current_user_blocked %}
+    <div class="publicacoes">
+        {% for publicacao in user.publicacoes %}
+        <form>
+            <p>{{ publicacao.texto }}</p>
+            <p><small>Postado por: {{ publicacao.usuario.username }}</small></p>
+            <p><strong>Curtidas:</strong> {{ publicacao.listar_curtidas()|join(', ') }}</p>
+        
+            {% set user_has_liked = false %}
+            {% for curtida in publicacao.curtidas %}
+                {% if curtida.usuario.id == current_user.id %}
+                    {% set user_has_liked = true %}
+                {% endif %}
+            {% endfor %}
+        
+            {% if not user_has_liked %}
+                <form action="{{ url_for('curtir_publicacao', publicacao_id=publicacao.id) }}" method="POST">
+                    <button type="submit">Curtir</button>
+                </form>
+            {% else %}
+                <span>Você já curtiu esta publicação</span>
+            {% endif %}
+        
+            <!-- Exibir comentários -->
+            <h4>Comentários:</h4>
+            <ul>
+                {% for comentario in publicacao.comentarios %}
+                    <li>
+                        <p>{{ comentario.texto }} - <small>{{ comentario.usuario.username }}</small></p>
+                        <p><strong>Curtidas:</strong> {{ comentario.listar_curtidas()|join(', ') }}</p>
+        
+                        <!-- Formulário para curtir o comentário -->
+                        {% if not comentario.curtidas.filter_by(id_usuario=current_user.id).first() %}
+                            <form action="{{ url_for('curtir_comentario', comentario_id=comentario.id) }}" method="POST">
+                                <button type="submit">Curtir</button>
+                            </form>
+                        {% else %}
+                            <span>Você já curtiu este comentário</span>
+                        {% endif %}
+        
+                        <!-- Exibir respostas ao comentário -->
+                        <ul>
+                            {% for resposta in comentario.respostas %}
+                                <li>
+                                    <p>{{ resposta.texto }} - <small>{{ resposta.usuario.username }}</small></p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+        
+                        <!-- Formulário para responder ao comentário -->
+                        <form action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}" method="POST">
+                            <textarea name="texto" placeholder="Responda ao comentário..."></textarea>
+                            <button type="submit">Responder</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        
+            <!-- Formulário para comentar -->
+            <form action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}" method="POST">
+                <textarea name="texto" placeholder="Comente sobre a publicação..."></textarea>
+                <button type="submit">Comentar</button>
+            </form>
+        </form>
+        
+        {% endfor %}
+    </div>
+    {% endif %}
 </body>
 
 </html>

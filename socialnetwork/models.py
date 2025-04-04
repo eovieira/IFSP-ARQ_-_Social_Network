@@ -1,5 +1,6 @@
 from db import db
 from flask_login import UserMixin
+from datetime import datetime
 
 class Usuario(UserMixin, db.Model):
     __tablename__ = 'usuario'
@@ -56,3 +57,101 @@ class Bloquear(db.Model):
     id_bloqueador = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_bloqueado = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     
+class Publicacao(db.Model):
+    __tablename__ = 'publicacao'
+
+    id = db.Column(db.Integer, primary_key=True)
+    texto = db.Column(db.String(), nullable=False)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    usuario = db.relationship('Usuario', backref='publicacoes', lazy=True)
+    curtidas = db.relationship('Curtida', backref='publicacao', lazy=True)
+    comentarios = db.relationship('Comentario', backref='comentarios_publicacao', lazy=True)
+    data_criacao = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, texto, usuario_id, data_criacao=None):
+        self.texto = texto
+        self.id_usuario = usuario_id
+        self.data_criacao = data_criacao or datetime.utcnow()
+
+    def listar_curtidas(self):
+        return [curtida.usuario.username for curtida in self.curtidas]
+
+    def listar_comentarios(self):
+        return [(comentario.usuario.username, comentario.texto) for comentario in self.comentarios]
+
+    def curtir(self, usuario):
+        curtida = Curtida(id_usuario=usuario.id, id_publicacao=self.id)
+        db.session.add(curtida)
+        db.session.commit()
+
+    def comentar(self, usuario, texto):
+        comentario = Comentario(id_usuario=usuario.id, id_publicacao=self.id, texto=texto)
+        db.session.add(comentario)
+        db.session.commit()
+        return comentario
+
+
+class Comentario(db.Model):
+    __tablename__ = 'comentario'
+
+    id = db.Column(db.Integer, primary_key=True)
+    texto = db.Column(db.String(), nullable=False)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    id_publicacao = db.Column(db.Integer, db.ForeignKey('publicacao.id'), nullable=False)
+    usuario = db.relationship('Usuario', backref='comentarios', lazy=True)
+    publicacao = db.relationship('Publicacao', backref='comentarios_publicacao', lazy=True)  # Relacionamento com publicacao
+    curtidas = db.relationship('Curtida', backref='comentario', lazy=True)
+    respostas = db.relationship('Resposta', backref='comentarios_resposta', lazy=True)  # Mudança aqui
+
+    def __init__(self, texto, usuario_id, publicacao_id):
+        self.texto = texto
+        self.id_usuario = usuario_id
+        self.id_publicacao = publicacao_id
+
+    def curtir(self, usuario):
+        curtida = Curtida(id_usuario=usuario.id, id_comentario=self.id)
+        db.session.add(curtida)
+        db.session.commit()
+
+    def responder(self, usuario, texto):
+        resposta = Resposta(texto=texto, id_usuario=usuario.id, id_comentario=self.id)
+        db.session.add(resposta)
+        db.session.commit()
+
+    def listar_curtidas(self):
+        return [curtida.usuario.username for curtida in self.curtidas]
+
+    def listar_respostas(self):
+        return [resposta.texto for resposta in self.respostas]
+
+
+class Resposta(db.Model):
+    __tablename__ = 'resposta'
+
+    id = db.Column(db.Integer, primary_key=True)
+    texto = db.Column(db.String(), nullable=False)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    id_comentario = db.Column(db.Integer, db.ForeignKey('comentario.id'), nullable=False)
+    usuario = db.relationship('Usuario', backref='respostas', lazy=True)
+    comentario = db.relationship('Comentario', backref='comentarios_resposta', lazy=True)  # Mudança aqui
+
+    def __init__(self, texto, id_usuario, id_comentario):
+        self.texto = texto
+        self.id_usuario = id_usuario
+        self.id_comentario = id_comentario
+
+
+class Curtida(db.Model):
+    __tablename__ = 'curtida'
+
+    id = db.Column(db.Integer, primary_key=True)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    id_publicacao = db.Column(db.Integer, db.ForeignKey('publicacao.id'), nullable=True)
+    id_comentario = db.Column(db.Integer, db.ForeignKey('comentario.id'), nullable=True)
+
+    usuario = db.relationship('Usuario', backref='curtidas', lazy=True)
+
+    def __init__(self, id_usuario, id_publicacao=None, id_comentario=None):
+        self.id_usuario = id_usuario
+        self.id_publicacao = id_publicacao
+        self.id_comentario = id_comentario

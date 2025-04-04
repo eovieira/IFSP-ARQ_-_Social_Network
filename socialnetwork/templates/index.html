@@ -32,14 +32,35 @@
             </nav>
         </div>
     </header>
+    
     <main>
         {% if error %}
         <div class='erro'>
             <p>{{error}}</p>
         </div>
         {% endif %}
+
         <div class="options">
+            <!-- Formulário para adicionar uma publicação -->
+            {% if current_user.is_authenticated %}
+            <form action="{{ url_for('adicionar_publicacao') }}" method="POST">
+                <textarea name="texto" rows="4" cols="50" placeholder="Escreva sua publicação..."></textarea><br><br>
+                <button type="submit">Publicar</button>
+            </form>
+            {% endif %}
         </div>
+
+        <!-- Exibir publicações -->
+        <div class="publicacoes">
+            <h2>Publicações Recentes:</h2>
+            {% for publicacao in publicacoes %}
+            <div class="publicacao">
+                <p><strong>{{ publicacao.usuario.username }}</strong> - {{ publicacao.texto }}</p>
+                <small>{{ publicacao.data_criacao }}</small>
+            </div>
+            {% endfor %}
+        </div>
+
     </main>
 </body>
 

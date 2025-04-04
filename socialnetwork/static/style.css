@@ -261,6 +261,7 @@ form a:hover{
 form input[type="text"],
 form input[type="password"],
 form input[type="submit"] {
+    font-family: 'Minecraftia';
     width: 100%;
     padding: 10px;
     margin: 6px 0;

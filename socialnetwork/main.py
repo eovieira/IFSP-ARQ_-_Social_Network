@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, login_remembered, logout_user, current_user
-from models import Usuario, Seguir, Bloquear
+from models import Usuario, Publicacao, Curtida, Comentario, Bloquear, Seguir
 from db import db
 import hashlib
 import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'b1b39f3b13f4d82f957ee82b2aff10ae7d5903aa1ab6baa6c77664f667dde823'
@@ -171,17 +172,25 @@ def perfil(username):
     if not user:
         flash("Usuário não encontrado", "error")
         return redirect(url_for('home'))
-    seguindo = Usuario.query.join(Seguir, Seguir.id_seguido == Usuario.id).filter(Seguir.id_seguidor == user.id).all()
-    seguidores = Usuario.query.join(Seguir, Seguir.id_seguidor == Usuario.id).filter(Seguir.id_seguido == user.id).all()
     
+    # Obter lista de seguidores e seguindo diretamente pelas relações definidas
+    seguindo = user.seguindo.all()  # Seguindo
+    seguidores = user.seguidores.all()  # Seguidores
+    
+    # Verificar se o usuário atual bloqueou o perfil visualizado
+    current_user_blocked = user in current_user.bloqueados.all()
+    current_user_is_blocking = user in current_user.bloqueados.all()
+
     return render_template(
         'utils/perfil.html',
         user=user,
         seguindo=seguindo,
         seguidores=seguidores,
         quantia_seguidores=user.quantia_seguidores,
-        quantia_seguindo=user.quantia_seguindo
-        )
+        quantia_seguindo=user.quantia_seguindo,
+        current_user_blocked=current_user_blocked,
+        current_user_is_blocking=current_user_is_blocking
+    )
 
 @app.route('/seguir/<int:id_usuario>', methods=['POST'])
 @login_required
@@ -206,6 +215,49 @@ def seguir_usuario(id_usuario):
 
     # Alterar para usar 'username' em vez de 'id_usuario'
     return redirect(url_for('perfil', username=usuario_a_seguir.username))
+
+@app.route('/curtir_publicacao/<int:publicacao_id>', methods=['POST'])
+@login_required
+def curtir_publicacao(publicacao_id):
+    publicacao = Publicacao.query.get_or_404(publicacao_id)
+    if not publicacao.curtidas.filter_by(id_usuario=current_user.id).first():
+        publicacao.curtir(current_user)
+    return redirect(url_for('perfil', username=publicacao.usuario.username))
+
+
+@app.route('/comentar_publicacao/<int:publicacao_id>', methods=['POST'])
+@login_required
+def comentar_publicacao(publicacao_id):
+    publicacao = Publicacao.query.get_or_404(publicacao_id)
+    texto = request.form.get('texto')
+    publicacao.comentar(current_user, texto)
+    return redirect(url_for('perfil', username=publicacao.usuario.username))
+
+@app.route('/curtir_comentario/<int:comentario_id>', methods=['POST'])
+@login_required
+def curtir_comentario(comentario_id):
+    comentario = Comentario.query.get_or_404(comentario_id)
+    if not comentario.curtidas.filter_by(id_usuario=current_user.id).first():
+        comentario.curtir(current_user)
+    return redirect(url_for('perfil', username=comentario.publicacao.usuario.username))
+
+@app.route('/responder_comentario/<int:comentario_id>', methods=['POST'])
+@login_required
+def responder_comentario(comentario_id):
+    comentario = Comentario.query.get_or_404(comentario_id)
+    texto = request.form.get('texto')
+    comentario.responder(current_user, texto)
+    return redirect(url_for('perfil', username=comentario.publicacao.usuario.username))
+
+@app.route('/adicionar_publicacao', methods=['POST'])
+@login_required
+def adicionar_publicacao():
+    texto = request.form['texto']
+    if texto:
+        publicacao = Publicacao(texto=texto, usuario_id=current_user.id, data_criacao=datetime.utcnow())
+        db.session.add(publicacao)
+        db.session.commit()
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     with app.app_context():
