@@ -96,10 +96,12 @@ def bloquear(username):
 
     bloquear_registro = Bloquear(id_bloqueador=current_user.id, id_bloqueado=usuario.id)
     
-    # Remover o follow caso exista
     seguir_registro = current_user.seguindo.filter_by(id_seguido=usuario.id).first()
     if seguir_registro:
         db.session.delete(seguir_registro)
+    seguido_por_ele = usuario.seguindo.filter_by(id_seguido=current_user.id).first()
+    if seguido_por_ele:
+        db.session.delete(seguido_por_ele)
 
     db.session.add(bloquear_registro)
     db.session.commit()
@@ -113,7 +115,7 @@ def desbloquear(username):
     usuario = Usuario.query.filter_by(username=username).first()
     if not usuario:
         flash("Usuário não encontrado", "error")
-        return redirect(url_for('index'))
+        return redirect(url_for(home))
 
     bloquear_registro = current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first()
     if bloquear_registro:
@@ -160,8 +162,7 @@ def deixar_de_seguir(username):
         flash(f"Você deixou de seguir {username}.", "info")
     else:
         flash("Você não segue este usuário.", "error")
-        
-    return redirect(url_for('perfil', username=current_user.username if username != current_user.username else username))
+    return redirect(url_for('perfil', username=username))
 
 @app.route('/perfil/<username>')
 @login_required
@@ -171,8 +172,16 @@ def perfil(username):
         flash("Usuário não encontrado", "error")
         return redirect(url_for('home'))
     seguindo = Usuario.query.join(Seguir, Seguir.id_seguido == Usuario.id).filter(Seguir.id_seguidor == user.id).all()
+    seguidores = Usuario.query.join(Seguir, Seguir.id_seguidor == Usuario.id).filter(Seguir.id_seguido == user.id).all()
     
-    return render_template('utils/perfil.html', user=user, seguindo=seguindo)
+    return render_template(
+        'utils/perfil.html',
+        user=user,
+        seguindo=seguindo,
+        seguidores=seguidores,
+        quantia_seguidores=user.quantia_seguidores,
+        quantia_seguindo=user.quantia_seguindo
+        )
 
 @app.route('/seguir/<int:id_usuario>', methods=['POST'])
 @login_required

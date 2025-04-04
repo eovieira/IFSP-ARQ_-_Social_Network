@@ -1,5 +1,10 @@
+@font-face {
+    font-family: 'Minecraftia';
+    src: url('fonts/Minecraftia-Regular.ttf');
+}
+
 body {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Minecraftia';
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -18,8 +23,9 @@ body {
 }
 
 header {
-    padding: 1vh 0;
-    background-color: rgb(50, 177, 50);
+    padding: 1.5vh 0 0;
+    background: radial-gradient(circle, rgb(44, 200, 49), rgb(48, 133, 48));
+
     width: 100%;
     position: sticky;
     top: 0;
@@ -37,18 +43,8 @@ header {
     position: relative;
 }
 
-.center-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2.5vh;
-    font-weight: bold;
-    color: white;
-    white-space: nowrap;
-}
-
 .logo-img {
-    height: 6vh;
+    height: 5vh;
     max-height: 50px;
 }
 
@@ -57,19 +53,18 @@ header {
     list-style: none;
     padding: 0;
     margin: 0;
-    font-size: 2.5vh;
+    font-size: 1vh;
 }
 
 .menu li {
-    font-weight: bold;
-    margin-left: 5vh;
+    margin-right: 3vh;
     color: white
 }
 
 .menu li a {
     color: white;
     text-decoration: none;
-    margin-right: 3vh;
+    margin-right: 2vh;
 }
 
 .admin_nav {
@@ -88,11 +83,11 @@ header {
     list-style: none;
     padding: 0;
     margin: 0;
-    font-size: 2.5vh;
+    font-size: 1.5vh;
 }
 
 .options li {
-    margin-right: 3vh;
+    margin-right: 1vh;
 }
 
 .options li a {
@@ -159,7 +154,7 @@ header {
     transform: translateX(-50%);
     font-size: 2.5vh;
     font-weight: bold;
-    color: white;
+    color: rgba(255, 255, 255, 0.964);
     white-space: nowrap;
 }
 
@@ -170,6 +165,8 @@ header {
 }
 
 .logo-img {
+    padding: 0;
+    margin: 0;
     height: 6vh;
     max-height: 50px;
 }
@@ -230,6 +227,35 @@ form {
     text-align: center;
     box-sizing: border-box;
     transition: all 0.3s ease;
+}
+
+form a{
+    text-decoration: none;
+    color: rgb(88, 88, 88);
+    margin: 2vh 2vh 0 2vh
+}
+
+#unfollow {
+    color: black;
+}
+
+#block {
+    color: rgb(226, 78, 78)
+}
+#block:hover {
+    color: rgb(181, 38, 38)
+}
+
+#unblock {
+    color: rgb(105, 198, 104)
+}
+#unblock:hover {
+    color: rgb(38, 181, 71)
+}
+
+form a:hover{
+    text-decoration: none;
+    color: rgba(33, 33, 33, 0.849);
 }
 
 form input[type="text"],

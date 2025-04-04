@@ -5,7 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
-    <title>Perfil de {{user.username}}</title>
+    <title>
+        {% if user.bloqueados.filter_by(id_bloqueado=current_user.id).first() %}
+            Usuário não encontrado
+        {% else %}
+            Perfil de {{ user.username }}
+        {% endif %}
+    </title>
 </head>
 
 <body>
@@ -13,15 +19,21 @@
         <div class="container">
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
                 class='logo-img'>
-            <p class='center-title'>Perfil de {{ user.username }}</p>
+            <p class='center-title'>
+                {% if user.bloqueados.filter_by(id_bloqueado=current_user.id).first() %}
+                    Usuário não encontrado
+                {% else %}
+                    Perfil de {{ user.username }}
+                {% endif %}
+            </p>
             <nav>
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('perfil', username=current_user.username) }}">
-                            @{{current_user.username.lower()}}<a></a>
+                            @{{ current_user.username.lower() }}</a>
                     </li>
                     {% if current_user.cargo == 'Administrador' %}
-                    <li><a href="{{ url_for('admin_panel') }}">Painel de administrador</a></li>
+                    <li><a href="{{ url_for('admin_panel') }}">Admin</a></li>
                     {% endif %}
                     <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
                     {% else %}
@@ -32,34 +44,47 @@
             </nav>
         </div>
     </header>
-    
-    {% if user.id == current_user.id %}
-    <h3>Seguindo:</h3>
-    <ul class="seguindo">
-        
-        {% for seguido in seguindo %}
-        <li>{{ seguido.username }}</li>
-        <form action="{{ url_for('deixar_de_seguir', username=seguido.username) }}" method="POST">
-            <button type=submit class="btn btn-primary">
-                {% if current_user.seguindo.filter_by(id_seguido=seguido.id).first() %}
-                Deixar de Seguir
-                {% endif %}
-            </button>
+    <form>
+    {% if user.bloqueados.filter_by(id_bloqueado=current_user.id).first() %}
+    <p>As informações do usuário não podem ser exibidas</p>
+    {% elif current_user.bloqueados.filter_by(id_bloqueado=user.id).first() %}
+        <p>Seguidores: {{ quantia_seguidores }}, Seguindo: {{ quantia_seguindo }}</p>
+        <p>Você bloqueou {{ user.username }}</p>
+        <form>
+            <a href="{{ url_for('desbloquear', username=user.username)}}"><span id="unblock">Desbloquear</span></a>
         </form>
-        {% endfor %}
-    </ul>
+
+    {% else %}
+        <p>Seguidores: {{ quantia_seguidores }}, Seguindo: {{ quantia_seguindo }}</p>
+        {% if user.id != current_user.id %}
+            
+                {% if current_user.seguindo.filter_by(id_seguido=user.id).first() %}
+                <a href="{{ url_for('deixar_de_seguir', username=user.username)}}">Deixar de seguir</a>
+                {% else %}
+                <a href="{{ url_for('seguir', username=user.username)}}">Seguir</a>
+                {% endif %}
+
+        {% if not current_user.bloqueados.filter_by(id_bloqueado=user.id).first() %}
+            <a href="{{ url_for('bloquear', username=user.username)}}"><span id="block">Bloquear</span></a>
+        
+        {% endif %}
+        {% endif %}
+        
+        <p>Seguindo:</p>
+        <ul class="seguindo">
+            {% for seguido in seguindo %}
+            <li>{{ seguido.username }}</li>
+            {% endfor %}
+        </ul>
+
+        <p>Seguidores:</p>
+        <ul class="seguidores">
+            {% for seguidor in seguidores %}
+            <li>{{ seguidor.username }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
-    {% if user.id != current_user.id %}
-    <form action="{{ url_for('seguir_usuario', id_usuario=user.id) }}" method="POST">
-        <button type="submit" class="btn btn-primary">
-            {% if current_user.seguindo.filter_by(id_seguido=user.id).first() %}
-            Deixar de seguir
-            {% else %}
-            Seguir
-            {% endif %}
-        </button>
     </form>
-    {% endif %}
 </body>
 
 </html>

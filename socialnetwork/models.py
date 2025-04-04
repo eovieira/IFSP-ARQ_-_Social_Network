@@ -37,14 +37,22 @@ class Usuario(UserMixin, db.Model):
         backref='bloqueado',
         lazy='dynamic'
     )
+    
+    @property
+    def quantia_seguidores(self):
+        return self.seguidores.count()
+    @property
+    def quantia_seguindo(self):
+        return self.seguindo.count()
 
 
 class Seguir(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_seguidor = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_seguido = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-
+    
 class Bloquear(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_bloqueador = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_bloqueado = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    
