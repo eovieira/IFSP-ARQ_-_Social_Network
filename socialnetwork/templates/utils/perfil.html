@@ -35,7 +35,7 @@
     
     {% if user.id == current_user.id %}
     <h3>Seguindo:</h3>
-    <ul>
+    <ul class="seguindo">
         
         {% for seguido in seguindo %}
         <li>{{ seguido.username }}</li>
