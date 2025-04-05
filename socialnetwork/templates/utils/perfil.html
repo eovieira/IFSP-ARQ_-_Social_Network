@@ -79,19 +79,19 @@
                         <p>{{ publicacao.texto }}</p>
                     </div>
                     <div class="acoes">
-                        <form method="POST" action="{{ url_for('descurtir_publicacao' if current_user.curtiu(publicacao) else 'curtir_publicacao', publicacao_id=publicacao.id) }}">
+                        <form method="POST" action="{{ url_for('descurtir_publicacao' if current_user.curtiu(publicacao) else 'curtir_publicacao', publicacao_id=publicacao.id) }}" style="display:inline;">
                             <a href="#" onclick="this.closest('form').submit();" class="botao-like">
-                                {{ '❤️' if current_user.curtiu(publicacao) else '🤍' }}
+                                {{ '❤️ Descurtir' if current_user.curtiu(publicacao) else '🤍 Curtir' }}
                             </a>
                         </form>
                         <span>{{ publicacao.curtidas | length }} curtidas</span>
                         {% if publicacao.usuario.id == current_user.id %}
                             <form method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}" style="display:inline;">
-                                <a href="#" onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && this.closest('form').submit();" class="botao-deletar">🗑️</a>
+                                <a href="#" onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && this.closest('form').submit();" class="botao-deletar">🗑️ Deletar</a>
                             </form>
                         {% elif current_user.cargo == 'Superadministrador' %}
                             <form method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}" style="display:inline;">
-                                <a href="#" onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && this.closest('form').submit();" class="botao-deletar">🗑️</a>
+                                <a href="#" onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && this.closest('form').submit();" class="botao-deletar">🗑️ Deletar</a>
                             </form>
                         {% endif %}
                     </div>
@@ -110,19 +110,19 @@
                                 <p>{{ comentario.texto }}</p>
                             </div>
                             <div class="acoes">
-                                <form method="POST" action="{{ url_for('descurtir_comentario' if current_user.curtiu(comentario) else 'curtir_comentario', comentario_id=comentario.id) }}">
+                                <form method="POST" action="{{ url_for('descurtir_comentario' if current_user.curtiu(comentario) else 'curtir_comentario', comentario_id=comentario.id) }}" style="display:inline;">
                                     <a href="#" onclick="this.closest('form').submit();" class="botao-like">
-                                        {{ '❤️' if current_user.curtiu(comentario) else '🤍' }}
+                                        {{ '❤️ Descurtir' if current_user.curtiu(comentario) else '🤍 Curtir' }}
                                     </a>
                                 </form>
                                 <span>{{ comentario.curtidas.count() }} curtidas</span>
                                 {% if comentario.usuario.id == current_user.id %}
                                     <form method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}" style="display:inline;">
-                                        <a href="#" onclick="return confirm('Deseja deletar este comentário?') && this.closest('form').submit();" class="botao-deletar">🗑️</a>
+                                        <a href="#" onclick="return confirm('Deseja deletar este comentário?') && this.closest('form').submit();" class="botao-deletar">🗑️ Deletar</a>
                                     </form>
                                 {% elif current_user.cargo == 'Superadministrador' %}
                                     <form method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}" style="display:inline;">
-                                        <a href="#" onclick="return confirm('Deseja deletar este comentário?') && this.closest('form').submit();" class="botao-deletar">🗑️</a>
+                                        <a href="#" onclick="return confirm('Deseja deletar este comentário?') && this.closest('form').submit();" class="botao-deletar">🗑️ Deletar</a>
                                     </form>
                                 {% endif %}
                             </div>
@@ -142,11 +142,11 @@
                                         </div>
                                         {% if resposta.usuario.id == current_user.id %}
                                             <form method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}" style="display:inline;">
-                                                <a href="#" onclick="return confirm('Deseja deletar esta resposta?') && this.closest('form').submit();" class="botao-deletar">🗑️</a>
+                                                <a href="#" onclick="return confirm('Deseja deletar esta resposta?') && this.closest('form').submit();" class="botao-deletar">🗑️ Deletar</a>
                                             </form>
                                         {% elif current_user.cargo == 'Superadministrador' %}
                                             <form method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}" style="display:inline;">
-                                                <a href="#" onclick="return confirm('Deseja deletar esta resposta?') && this.closest('form').submit();" class="botao-deletar">🗑️</a>
+                                                <a href="#" onclick="return confirm('Deseja deletar esta resposta?') && this.closest('form').submit();" class="botao-deletar">🗑️ Deletar</a>
                                             </form>
                                         {% endif %}
                                     </div>

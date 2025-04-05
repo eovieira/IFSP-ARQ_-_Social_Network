@@ -54,19 +54,19 @@
             <h2>Publicações Recentes:</h2>
             {% for publicacao in publicacoes %}
             <div class="publicacao">
-                <p><strong>{{ publicacao.usuario.username }}</strong> - {{ publicacao.texto }}</p>
+                <strong><a class="user" href="{{ url_for('perfil', username=publicacao.usuario.username) }}">{{ publicacao.usuario.username }}</a></strong> - {{ publicacao.texto }}<br>
                 <small>{{ publicacao.data_criacao.strftime('%d/%m/%Y %H:%M') }}</small>
 
                 {% if current_user.is_authenticated %}
                     {% set ja_curtiu_pub = publicacao.curtidas | selectattr('usuario.id', 'equalto', current_user.id) | list | length > 0 %}
-                    <form method="POST" action="{{ url_for('descurtir_publicacao' if ja_curtiu_pub else 'curtir_publicacao', publicacao_id=publicacao.id) }}" id="curtir-{{ publicacao.id }}">
-                        <a href="#" onclick="submitForm('curtir-{{ publicacao.id }}')">{{ '❤️ Descurtir' if ja_curtiu_pub else '🤍 Curtir' }}</a>
+                    <div class="acoes">
+                    <form method="POST" action="{{ url_for('descurtir_publicacao' if ja_curtiu_pub else 'curtir_publicacao', publicacao_id=publicacao.id) }}" id="curtir-{{ publicacao.id }}" style="display:inline;">
+                        <a href="#" onclick="submitForm('curtir-{{ publicacao.id }}')" class="botao-like">{{ '❤️ Descurtir' if ja_curtiu_pub else '🤍 Curtir' }}</a>
                         <span>{{ publicacao.curtidas | length }} curtidas</span>
                     </form>
-
                     {% if publicacao.usuario.id == current_user.id %}
-                        <form method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}" style="display:inline;" id="delete-pub-{{ publicacao.id }}">
-                            <a href="#" onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')">🗑️ Deletar</a>
+                        <form method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}" style="display:inline;" id="delete-pub-{{ publicacao.id }}" style="display:inline;">
+                            <a href="#" onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')" class="botao-deletar">🗑️ Deletar</a>
                         </form>
                     {% endif %}
                 {% endif %}
@@ -74,47 +74,48 @@
                 <h4>Comentários:</h4>
                 {% for comentario in publicacao.comentarios %}
                     <div class="comentario">
-                        <p><strong>{{ comentario.usuario.username }}</strong>: {{ comentario.texto }}</p>
+                        <strong><a class="user" href="{{ url_for('perfil', username=comentario.usuario.username)}}">{{ comentario.usuario.username }}</a></strong>- {{ comentario.texto }}
 
                         {% if current_user.is_authenticated %}
                             {% set ja_curtiu_coment = comentario.curtidas | selectattr('usuario.id', 'equalto', current_user.id) | list | length > 0 %}
-                            <form method="POST" action="{{ url_for('descurtir_comentario' if ja_curtiu_coment else 'curtir_comentario', comentario_id=comentario.id) }}" id="curtir-com-{{ comentario.id }}">
-                                <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')">{{ '❤️ Descurtir' if ja_curtiu_coment else '🤍 Curtir' }}</a>
+                            <form method="POST" action="{{ url_for('descurtir_comentario' if ja_curtiu_coment else 'curtir_comentario', comentario_id=comentario.id) }}" id="curtir-com-{{ comentario.id }}" style="display:inline;">
+                                <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">{{ '❤️ Descurtir' if ja_curtiu_coment else '🤍 Curtir' }}</a>
                                 <span>{{ comentario.curtidas.count() }} curtidas</span>
                             </form>
 
                             {% if comentario.usuario.id == current_user.id %}
-                                <form method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}" style="display:inline;" id="delete-com-{{ comentario.id }}">
-                                    <a href="#" onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')">🗑️</a>
+                                <form method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}" style="display:inline;" id="delete-com-{{ comentario.id }}" style="display:inline;">
+                                    <a href="#" onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')" class="botao-deletar">🗑️</a>
                                 </form>
                             {% endif %}
 
                             <div class="respostas">
                                 {% for resposta in comentario.respostas %}
                                     <div class="resposta">
-                                        <p><strong>{{ resposta.usuario.username }}</strong>: {{ resposta.texto }}</p>
+                                        <strong><a href="{{url_for('perfil', username=resposta.usuario.username)}}" class="user">{{resposta.usuario.username}}</a></strong>- {{ resposta.texto }}
                                         {% if resposta.usuario.id == current_user.id %}
                                             <form method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}" style="display:inline;" id="delete-resp-{{ resposta.id }}">
-                                                <a href="#" onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')">🗑️</a>
+                                                <a href="#" onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')" class="botao-deletar">🗑️</a>
                                             </form>
                                         {% endif %}
                                     </div>
                                 {% endfor %}
                             </div>
 
-                            <form method="POST" action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}" id="responder-{{ comentario.id }}">
+                            <form method="POST" action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}" id="responder-{{ comentario.id }}" style="display:inline;" class="form-resposta">
                                 <input type="text" name="texto" placeholder="Responder..." required>
-                                <a href="#" onclick="submitForm('responder-{{ comentario.id }}')">Responder</a>
+                                <button type="submit">Responder</button>
                             </form>
                         {% endif %}
                     </div>
                 {% endfor %}
 
                 {% if current_user.is_authenticated %}
-                    <form method="POST" action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}" id="comentar-{{ publicacao.id }}">
+                    <form method="POST" action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}" id="comentar-{{ publicacao.id }}" class="form-comentario">
                         <input type="text" name="texto" placeholder="Comentar..." required>
-                        <a href="#" onclick="submitForm('comentar-{{ publicacao.id }}')">Comentar</a>
+                        <button type="submit">Comentar</button>
                     </form>
+                </div>
                 {% endif %}
             </div>
             <hr>
