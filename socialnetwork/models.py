@@ -39,6 +39,13 @@ class Usuario(UserMixin, db.Model):
         lazy='dynamic'
     )
     
+    def curtiu(self, item):
+        if isinstance(item, Publicacao):
+            return Curtida.query.filter_by(id_usuario=self.id, id_publicacao=item.id).first() is not None
+        elif isinstance(item, Comentario):
+            return Curtida.query.filter_by(id_usuario=self.id, id_comentario=item.id).first() is not None
+        return False
+    
     @property
     def quantia_seguidores(self):
         return self.seguidores.count()
@@ -114,20 +121,23 @@ class Comentario(db.Model):
     texto = db.Column(db.String(), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_publicacao = db.Column(db.Integer, db.ForeignKey('publicacao.id'), nullable=False)
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # <-- Adicionado aqui
+
     usuario = db.relationship('Usuario', backref='comentarios', lazy=True)
-    publicacao = db.relationship('Publicacao', backref='comentarios_publicacao', lazy=True)  # Relacionamento com publicacao
+    publicacao = db.relationship('Publicacao', backref='comentarios_publicacao', lazy=True)
     curtidas = db.relationship('Curtida', backref='comentario', lazy='dynamic')
     respostas = db.relationship(
-    'Resposta',
-    backref='comentario_pai',
-    lazy=True,
-    cascade='all, delete-orphan'
+        'Resposta',
+        backref='comentario_pai',
+        lazy=True,
+        cascade='all, delete-orphan'
     )
 
     def __init__(self, texto, usuario_id, publicacao_id):
         self.texto = texto
         self.id_usuario = usuario_id
         self.id_publicacao = publicacao_id
+        self.data_criacao = datetime.utcnow()
 
     def curtir(self, usuario):
         curtida = Curtida(id_usuario=usuario.id, id_comentario=self.id)
@@ -146,21 +156,24 @@ class Comentario(db.Model):
         return [resposta.texto for resposta in self.respostas]
 
 
+from datetime import datetime
+
 class Resposta(db.Model):
     __tablename__ = 'resposta'
 
     id = db.Column(db.Integer, primary_key=True)
     texto = db.Column(db.String(), nullable=False)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)  # 🔹 Aqui está o novo campo
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_comentario = db.Column(db.Integer, db.ForeignKey('comentario.id'), nullable=False)
+
     usuario = db.relationship('Usuario', backref='respostas', lazy=True)
-    comentario = db.relationship('Comentario', backref='comentarios_resposta', lazy=True)  # Mudança aqui
+    comentario = db.relationship('Comentario', backref='comentarios_resposta', lazy=True)
 
     def __init__(self, texto, id_usuario, id_comentario):
         self.texto = texto
         self.id_usuario = id_usuario
         self.id_comentario = id_comentario
-
 
 class Curtida(db.Model):
     __tablename__ = 'curtida'

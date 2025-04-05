@@ -198,13 +198,11 @@ def perfil(username):
         flash("Usuário não encontrado", "error")
         return redirect(url_for('home'))
     
-    # Obter lista de seguidores e seguindo diretamente pelas relações definidas
-    seguindo = user.seguindo.all()  # Seguindo
-    seguidores = user.seguidores.all()  # Seguidores
+    seguindo = user.seguindo.all()
+    seguidores = user.seguidores.all()
     
-    # Verificar se o usuário atual bloqueou o perfil visualizado
-    current_user_blocked = user in current_user.bloqueados.all()
-    current_user_is_blocking = user in current_user.bloqueados.all()
+    current_user_blocked = current_user in user.bloqueados.all()  # Fui bloqueado
+    current_user_is_blocking = user in current_user.bloqueados.all()  # Eu bloqueei
 
     return render_template(
         'utils/perfil.html',
@@ -366,6 +364,38 @@ def deletar_publicacao(publicacao_id):
     flash("Publicação deletada com sucesso.", "success")
     return redirect(request.referrer or url_for('home'))
 
+@app.route('/curtir/resposta/<int:resposta_id>', methods=['POST'])
+@login_required
+def curtir_resposta(resposta_id):
+    resposta = Resposta.query.get_or_404(resposta_id)
+    curtida_existente = Curtida.query.filter_by(id_usuario=current_user.id, id_resposta=resposta_id).first()
+    if not curtida_existente:
+        nova_curtida = Curtida(id_usuario=current_user.id, id_resposta=resposta_id)
+        db.session.add(nova_curtida)
+        db.session.commit()
+    return redirect(request.referrer or url_for('home'))
+
+@app.route('/descurtir/resposta/<int:resposta_id>', methods=['POST'])
+@login_required
+def descurtir_resposta(resposta_id):
+    curtida = Curtida.query.filter_by(id_usuario=current_user.id, id_resposta=resposta_id).first()
+    if curtida:
+        db.session.delete(curtida)
+        db.session.commit()
+    resposta = Resposta.query.get_or_404(resposta_id)
+    return redirect(request.referrer or url_for('home'))
+
+@app.route('/responder/resposta/<int:resposta_id>', methods=['POST'])
+@login_required
+def responder_resposta(resposta_id):
+    texto = request.form.get('texto')
+    if not texto:
+        abort(400)  # Caso não haja texto na resposta, retorna erro 400
+    resposta = Resposta.query.get_or_404(resposta_id)
+    nova_resposta = Resposta(texto=texto, id_usuario=current_user.id, id_resposta=resposta.id)
+    db.session.add(nova_resposta)
+    db.session.commit()
+    return redirect(request.referrer or url_for('home'))
 
 if __name__ == '__main__':
     with app.app_context():

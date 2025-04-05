@@ -1,578 +1,481 @@
-@font-face {
-    font-family: 'Minecraftia';
-    src: url('fonts/Minecraftia-Regular.ttf');
-}
-
+/* Estilos gerais */
 body {
-    font-family: 'Minecraftia';
+    font-family: Arial, sans-serif;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    padding: 0;
     background-color: #f4f4f4;
 }
 
-.admin_panel {
-    padding: 1vh 0;
-    background-color: rgba(105, 111, 118, 0.823);
-    width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
 header {
-    padding: 1.5vh 0 0;
-    background: radial-gradient(circle, rgb(44, 200, 49), rgb(48, 133, 48));
-
-    width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
 }
 
 .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap;
-    max-width: 1200px;
+    width: 80%;
     margin: 0 auto;
-    padding: 0 10px;
-    position: relative;
 }
 
 .logo-img {
-    height: 5vh;
-    max-height: 50px;
-}
-
-.menu {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 1vh;
-}
-
-.menu li {
-    margin-right: 3vh;
-    color: white
-}
-
-.menu li a {
-    color: white;
-    text-decoration: none;
-    margin-right: 2vh;
-}
-
-.admin_nav {
-    padding: 1vh 0;
-    background-color: rgba(191, 226, 191, 0);
-    width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-}
-
-.options {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 1.5vh;
-}
-
-.options li {
-    margin-right: 1vh;
-}
-
-.options li a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-}
-
-.options li a:hover {
-    color: rgb(51, 50, 50);
-    text-decoration: none;
-}
-
-.erro {
-    text-decoration: none;
-    color: red;
-    font-size: 2.5vh;
-}
-
-.publicacoes {
-    background-color: red;
-}
-
-.comentario {
-    background-color: blue;
-}
-
-.Perfil {
-    background-color: beige;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 90vh;
-    text-align: center;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-}
-
-/* Media Queries para Responsividade */
-@media (max-width: 768px) {
-    .carousel {
-        height: 400px;
-        width: 95%;
-    }
-
-    .carousel-control {
-        width: 40px;
-        height: 40px;
-        padding: 10px;
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .carousel {
-        height: 300px;
-    }
-
-    .carousel-control {
-        width: 35px;
-        height: 35px;
-        font-size: 1.2rem;
-    }
-
-    .carousel-indicators {
-        bottom: 10px;
-    }
-}
-
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 10px;
-    position: relative;
+    width: 50px;
+    vertical-align: middle;
 }
 
 .center-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2.5vh;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 1.5em;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
     font-weight: bold;
-    color: rgba(255, 255, 255, 0.964);
-    white-space: nowrap;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5vh;
-}
-
-.logo-img {
-    padding: 0;
-    margin: 0;
-    height: 6vh;
-    max-height: 50px;
-}
-
-.menu {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 2.5vh;
-}
-
-.menu li {
-    margin-left: 5vh;
-}
-
-.menu li a {
-    color: white;
+/* Estilos para os links de "Curtir" e "Apagar" */
+.comentario .acoes a,
+.publicacoes .acoes a {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1em; /* Mesmo tamanho de fonte do comentário */
     text-decoration: none;
-}
-
-.menu li a:hover {
-    color: rgb(196, 196, 196);
-    text-decoration: dotted;
-}
-
-.menu li .sair {
-    color: rgb(255, 103, 103)
-}
-
-.menu li .sair:hover {
-    color: rgb(209, 34, 34)
-}
-
-.form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: calc(100vh - 70px);
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.error-message {
-    color: rgb(255, 83, 83);
-    font-size: 2.5vh;
-    margin-bottom: 10px;
-}
-
-form {
-    background-color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 350px;
-    text-align: center;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-}
-
-form a{
-    text-decoration: none;
-    color: rgb(88, 88, 88);
-    margin: 2vh 2vh 0 2vh
-}
-
-#unfollow {
-    color: black;
-}
-
-#block {
-    color: rgb(226, 78, 78)
-}
-#block:hover {
-    color: rgb(181, 38, 38)
-}
-
-#unblock {
-    color: rgb(105, 198, 104)
-}
-#unblock:hover {
-    color: rgb(38, 181, 71)
-}
-
-form a:hover{
-    text-decoration: none;
-    color: rgba(33, 33, 33, 0.849);
-}
-
-form input[type="text"],
-form input[type="password"],
-form input[type="submit"] {
-    font-family: 'Minecraftia';
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    box-sizing: border-box;
-}
-
-form input[type="text"],
-form input[type="password"] {
-    border: 1px solid #ccc;
-}
-
-form input[type="submit"] {
-    background-color: rgb(50, 177, 50);
-    color: white;
+    color: inherit;
     border: none;
+    background: none;
+}
+
+.comentario .acoes span,
+.publicacoes .acoes span {
+    margin-left: 5px;
+    font-size: 0.9em;
+}
+
+.comentario .acoes a.botao-like,
+.publicacoes .acoes a.botao-like {
+    color: #333;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-form input[type="submit"]:hover {
-    background-color: rgb(40, 150, 40);
+.comentario .acoes a.botao-deletar,
+.publicacoes .acoes a.botao-deletar {
+    color: #e74c3c;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-@media (max-width: 768px) {
-    .logo-img {
-        height: 5vh;
-    }
-
-    .center-title {
-        transform: translateX(-50%);
-        font-size: 2.2vh;
-    }
-
-    .menu {
-        font-size: 2.2vh;
-    }
-
-    .menu li {
-        margin-left: 3vh;
-    }
-
-    .header-left {
-        gap: 1vh;
-    }
-
-    form {
-        max-width: 80%;
-        padding: 12px 15px;
-    }
-
-    form input[type="text"],
-    form input[type="password"],
-    form input[type="submit"] {
-        padding: 8px;
-        font-size: 0.85rem;
-    }
+.comentario .acoes a.botao-like:hover,
+.publicacoes .acoes a.botao-like:hover,
+.comentario .acoes a.botao-deletar:hover,
+.publicacoes .acoes a.botao-deletar:hover {
+    color: #555;
 }
 
-@media (max-width: 480px) {
-    .logo-img {
-        height: 4.5vh;
-    }
-
-    .center-title {
-        transform: translateX(-50%);
-        font-size: 1.8vh;
-    }
-
-    .menu {
-        font-size: 1.8vh;
-    }
-
-    .menu li {
-        margin-left: 1.5vh;
-    }
-
-    .container {
-        padding: 0 8px;
-    }
-
-    .error-message {
-        color: rgb(255, 83, 83);
-        font-size: 1.5vh;
-        margin-bottom: 10px;
-    }
-
-    form {
-        max-width: 95%;
-        padding: 10px 12px;
-    }
-
-    form input[type="text"],
-    form input[type="password"],
-    form input[type="submit"] {
-        padding: 7px;
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 320px) {
-
-    .error-message {
-        color: rgb(255, 83, 83);
-        font-size: 1.5vh;
-        margin-bottom: 10px;
-    }
-
-    form {
-        max-width: 95%;
-        padding: 8px 10px;
-    }
-
-    form input[type="text"],
-    form input[type="password"],
-    form input[type="submit"] {
-        font-size: 0.75rem;
-        padding: 6px;
-    }
-
-    .menu {
-        font-size: 1.5vh;
-    }
-
-    .menu li {
-        margin-left: 1vh;
-    }
-
-    .center-title {
-        font-size: 1.5vh;
-    }
-
-    .logo-img {
-        height: 4vh;
-    }
-}
-
-@media (max-width: 768px) and (orientation: landscape) {
-    .form-container {
-        padding: 10px;
-    }
-
-
-    form {
-        max-width: 60%;
-        padding: 10px 15px;
-    }
-
-    form input[type="text"],
-    form input[type="password"],
-    form input[type="submit"] {
-        padding: 8px;
-        font-size: 0.8rem;
-        margin: 4px 0;
-    }
-
-    header {
-        padding: 0.5vh 0;
-    }
-
-    .logo-img {
-        height: 4vh;
-    }
-
-    .center-title {
-        font-size: 2vh;
-    }
-
-    .menu {
-        font-size: 1.8vh;
-    }
-
-    .menu li {
-        margin-left: 2vh;
-    }
-}
-
-@media (min-width: 769px) {
-
-    .error-message {
-        color: rgb(255, 83, 83);
-        font-size: 1.5vh;
-        margin-bottom: 10px;
-    }
-
-    .form-container {
-        padding: 20px 30px;
-    }
-
-    form {
-        padding: 20px 25px;
-    }
-
-    form input[type="text"],
-    form input[type="password"],
-    form input[type="submit"] {
-        font-size: 1rem;
-    }
-}
-
-@media (min-width: 1200px) {
-    .logo-img {
-        height: 7vh;
-    }
-
-    .error-message {
-        color: rgb(255, 83, 83);
-        font-size: 1.5vh;
-        margin-bottom: 10px;
-    }
-
-    .menu {
-        font-size: 2.8vh;
-    }
-
-    .center-title {
-        font-size: 3vh;
-    }
-}
-
-.tabela {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: calc(100vh - 70px);
+/* Estilos específicos para a área de comentários e publicações */
+.Perfil {
+    background-color: white;
     padding: 20px;
-    box-sizing: border-box;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-table {
-    background-color: rgb(197, 197, 197);
-    margin-bottom: 135px;
-    font-size: 18px;
-    width: 100%;
-    height: 500px;
-    margin: 5%;
+.Perfil p {
+    font-size: 1.2em;
 }
 
-thead {
-    background-color: rgb(99, 99, 99);
+.Perfil strong {
+    font-size: 1.3em;
 }
 
-thead tr {
-    text-shadow: 2px 2px 3px grey;
+.botao {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-top: 10px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-table tbody tr:hover {
-    background-color: rgb(106, 255, 106);
+.botao:hover {
+    background-color: #2980b9;
 }
 
-td,
-th {
-    text-align: center;
-    padding: 10px;
+/* Estilo para as publicações */
+.publicacoes {
+    background-color: white;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.topo-publicacao {
+    display: flex;
+    align-items: center;
 }
 
 .icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 15px;
-    border: 2px solid black;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
-footer {
-    background-color: rgb(50, 177, 50);
-    padding: 0.8vh 0;
+.texto-publicacao p {
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+/* Estilos para as respostas e comentários */
+.comentario,
+.resposta {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.comentario .topo-publicacao,
+.resposta .topo-publicacao {
+    display: flex;
+    align-items: center;
+}
+
+.comentario .texto-publicacao,
+.resposta .texto-publicacao {
+    margin-top: 5px;
+}
+
+.comentario .acoes,
+.resposta .acoes {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.form-comentario,
+.form-resposta {
+    display: flex;
+    margin-top: 15px;
+}
+
+.form-comentario input,
+.form-resposta input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.form-comentario button,
+.form-resposta button {
+    padding: 10px 15px;
+    font-size: 1em;
+    margin-left: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-comentario button:hover,
+.form-resposta button:hover {
+    background-color: #2980b9;
+}
+
+/* Estilos para quando a publicação não for encontrada */
+.Perfil p {
+    font-size: 1.2em;
+    color: #333;
+}
+
+/* Estilos adicionais de responsividade */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+
+    .menu {
+        text-align: center;
+    }
+
+    .menu li {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .form-comentario,
+    .form-resposta {
+        flex-direction: column;
+    }
+
+    .form-comentario input,
+    .form-resposta input,
+    .form-comentario button,
+    .form-resposta button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .form-comentario button,
+    .form-resposta button {
+        margin-left: 0;
+    }
+}
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.logo-img {
+    width: 50px;
+    vertical-align: middle;
+}
+
+.center-title {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Formulário */
+.form-container {
     width: 100%;
-}
-
-footer ul {
-    list-style: none;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
-footer ul li {
-    display: inline;
-    padding-left: 80px;
-    padding-right: 80px;
+.form-container p {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    font-weight: bold;
 }
 
+.form-container input {
+    width: 100%;
+    max-width: 100%; /* Garante que os inputs não ultrapassem a largura do contêiner */
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Garante que o preenchimento e a borda não ultrapassem o tamanho */
+}
+
+.form-container input[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+    width: 100%; /* Faz o botão ter o mesmo tamanho dos inputs */
+    padding: 12px;
+}
+
+.form-container input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Mensagem de erro */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin: 10px 0;
+}
+
+/* Rodapé */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+footer ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+footer ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+footer ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+footer ul li a:hover {
+    color: #3498db;
+}
+
+footer .icon {
+    width: 40px;
+    height: 40px;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
-    .icon {
-        width: 35px;
-        height: 35px;
-        border-radius: 10px;
-        border: 1px solid black;
+    .container {
+        width: 90%;
     }
 
-    footer ul li {
-        padding-left: 30px;
-        padding-right: 30px;
+    nav ul {
+        text-align: center;
     }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .form-container {
+        width: 90%;
+    }
+}
+
+form input[type="text"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form a {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+form a:hover {
+    background-color: #2980b9;
+}
+
+.options {
+    text-align: center;
+    margin-top: 20px;
+}
+
+textarea {
+    width: 60%;
+    min-width: 300px;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+a:hover {
+    background-color: #45a049;
+}
+
+form {
+    margin: 20px 0;
+}
+
+.publicacoes {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.publicacao {
+    margin-bottom: 20px;
+}
+
+h2, h4 {
+    color: #333;
+}
+
+/* Estilo de formulário de comentários */
+form input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+.erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
 }
