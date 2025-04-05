@@ -1,0 +1,51 @@
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+
+    .menu {
+        text-align: center;
+    }
+
+    .menu li {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .form-comentario,
+    .form-resposta {
+        flex-direction: column;
+    }
+
+    .form-comentario input,
+    .form-resposta input,
+    .form-comentario button,
+    .form-resposta button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .form-comentario button,
+    .form-resposta button {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+
+    nav ul {
+        text-align: center;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .form-container {
+        width: 90%;
+    }
+}

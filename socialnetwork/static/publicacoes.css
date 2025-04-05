@@ -1,0 +1,143 @@
+form input[type="text"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.publicacoes {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.publicacao {
+    margin-bottom: 20px;
+}
+
+.topo-publicacao {
+    display: flex;
+    align-items: center;
+}
+
+.texto-publicacao p {
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+.comentario .acoes a,
+.publicacoes .acoes a {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1em;
+    /* Mesmo tamanho de fonte do comentário */
+    text-decoration: none;
+    color: inherit;
+    border: none;
+    background: none;
+}
+
+.comentario .acoes span,
+.publicacoes .acoes span {
+    margin-left: 5px;
+    font-size: 0.9em;
+}
+
+.comentario .acoes a.botao-like,
+.publicacoes .acoes a.botao-like {
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.comentario .acoes a.botao-deletar,
+.publicacoes .acoes a.botao-deletar {
+    color: #e74c3c;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.comentario .acoes a.botao-like:hover,
+.publicacoes .acoes a.botao-like:hover,
+.comentario .acoes a.botao-deletar:hover,
+.publicacoes .acoes a.botao-deletar:hover {
+    color: #555;
+}
+
+.comentario,
+.resposta {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.comentario .topo-publicacao,
+.resposta .topo-publicacao {
+    display: flex;
+    align-items: center;
+}
+
+.comentario .texto-publicacao,
+.resposta .texto-publicacao {
+    margin-top: 5px;
+}
+
+.comentario .acoes,
+.resposta .acoes {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.form-comentario,
+.form-resposta {
+    display: flex;
+    margin-top: 15px;
+}
+
+.form-comentario input,
+.form-resposta input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.form-comentario button,
+.form-resposta button {
+    padding: 10px 15px;
+    font-size: 1em;
+    margin-left: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-comentario button:hover,
+.form-resposta button:hover {
+    background-color: #2980b9;
+}
+
+form button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+form button:hover {
+    background-color: #45a049;
+}

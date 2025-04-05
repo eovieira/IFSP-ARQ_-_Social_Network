@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #002050ce, #003061);
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin: 10px 0;
+}
+
+.erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}

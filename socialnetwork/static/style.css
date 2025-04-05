@@ -1,10 +1,5 @@
 /* Estilos gerais */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
+
 
 header {
     background-color: #333;
@@ -13,10 +8,7 @@ header {
     text-align: center;
 }
 
-.container {
-    width: 80%;
-    margin: 0 auto;
-}
+
 
 .logo-img {
     width: 50px;
@@ -50,7 +42,8 @@ nav ul li a {
 .publicacoes .acoes a {
     display: inline-block;
     margin-right: 10px;
-    font-size: 1em; /* Mesmo tamanho de fonte do comentário */
+    font-size: 1em;
+    /* Mesmo tamanho de fonte do comentário */
     text-decoration: none;
     color: inherit;
     border: none;
@@ -131,12 +124,7 @@ nav ul li a {
     align-items: center;
 }
 
-.icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
+
 
 .texto-publicacao p {
     font-size: 1.1em;
@@ -242,38 +230,14 @@ nav ul li a {
         margin-left: 0;
     }
 }
+
 .container {
     width: 80%;
     margin: 0 auto;
 }
 
-.logo-img {
-    width: 50px;
-    vertical-align: middle;
-}
 
-.center-title {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 1.8em;
-    font-weight: bold;
-}
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline-block;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
 
 /* Formulário */
 .form-container {
@@ -295,13 +259,15 @@ nav ul li a {
 
 .form-container input {
     width: 100%;
-    max-width: 80%; /* Garante que os inputs não ultrapassem a largura do contêiner */
+    max-width: 80%;
+    /* Garante que os inputs não ultrapassem a largura do contêiner */
     padding: 12px;
     margin: 10px 0;
     font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Garante que o preenchimento e a borda não ultrapassem o tamanho */
+    box-sizing: border-box;
+    /* Garante que o preenchimento e a borda não ultrapassem o tamanho */
 }
 
 .form-container input[type="submit"] {
@@ -310,7 +276,8 @@ nav ul li a {
     cursor: pointer;
     transition: background-color 0.3s ease;
     border: none;
-    width: 80%; /* Faz o botão ter o mesmo tamanho dos inputs */
+    width: 80%;
+    /* Faz o botão ter o mesmo tamanho dos inputs */
     padding: 12px;
 }
 
@@ -326,36 +293,7 @@ nav ul li a {
 }
 
 /* Rodapé */
-footer {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-}
 
-footer ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-footer ul li {
-    display: inline-block;
-    margin-right: 20px;
-}
-
-footer ul li a {
-    color: white;
-    text-decoration: none;
-}
-
-footer ul li a:hover {
-    color: #3498db;
-}
-
-footer .icon {
-    width: 40px;
-    height: 40px;
-}
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -445,7 +383,8 @@ form {
     margin-bottom: 20px;
 }
 
-h2, h4 {
+h2,
+h4 {
     color: #333;
 }
 
@@ -478,7 +417,8 @@ form button:hover {
 }
 
 a.user {
-    all: unset; /* Remove todos os estilos padrão */
+    all: unset;
+    /* Remove todos os estilos padrão */
     color: black;
     cursor: pointer;
     text-decoration: none;
@@ -488,5 +428,6 @@ a.user {
 }
 
 a.user:hover {
-    color: #555; /* Cor mais escura ao passar o mouse */
+    color: #555;
+    /* Cor mais escura ao passar o mouse */
 }
