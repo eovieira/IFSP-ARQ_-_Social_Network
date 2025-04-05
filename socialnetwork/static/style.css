@@ -106,6 +106,26 @@ header {
     font-size: 2.5vh;
 }
 
+.publicacoes {
+    background-color: red;
+}
+
+.comentario {
+    background-color: blue;
+}
+
+.Perfil {
+    background-color: beige;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 90vh;
+    text-align: center;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
 /* Media Queries para Responsividade */
 @media (max-width: 768px) {
     .carousel {

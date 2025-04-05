@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, login_remembered, logout_user, current_user
-from models import Usuario, Publicacao, Curtida, Comentario, Bloquear, Seguir
+from models import Usuario, Publicacao, Curtida, Comentario, Bloquear, Seguir, Resposta
+from sqlalchemy import case, desc
 from db import db
 import hashlib
 import sqlite3
@@ -24,7 +25,24 @@ def user_loader(id):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    if current_user.is_authenticated:
+        seguindo_ids = [rel.id_seguido for rel in current_user.seguindo]
+
+        # Corrigido: passando o when como argumento posicional
+        prioridade_case = case(
+            (Publicacao.id_usuario.in_(seguindo_ids), 0),
+            else_=1
+        )
+
+        publicacoes = Publicacao.query \
+            .order_by(prioridade_case, desc(Publicacao.data_criacao)) \
+            .all()
+    else:
+        publicacoes = Publicacao.query \
+            .order_by(desc(Publicacao.data_criacao)) \
+            .all()
+
+    return render_template('index.html', publicacoes=publicacoes)
 
 @app.route('/usuarios')
 def usuarios():
@@ -93,7 +111,8 @@ def bloquear(username):
 
     if current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first():
         flash("Você já bloqueou este usuário.", "info")
-        return redirect(url_for('perfil', username=username))
+        return redirect(request.referrer or url_for('home'))
+
 
     bloquear_registro = Bloquear(id_bloqueador=current_user.id, id_bloqueado=usuario.id)
     
@@ -107,7 +126,8 @@ def bloquear(username):
     db.session.add(bloquear_registro)
     db.session.commit()
     flash(f"Você bloqueou {username}.", "warning")
-    return redirect(url_for('perfil', username=username))
+    return redirect(request.referrer or url_for('home'))
+
 
 
 @app.route('/desbloquear/<username>')
@@ -126,7 +146,8 @@ def desbloquear(username):
     else:
         flash("Este usuário não está bloqueado.", "error")
 
-    return redirect(url_for('perfil', username=username))
+    return redirect(request.referrer or url_for('home'))
+
 
 @app.route('/seguir/<username>')
 @login_required
@@ -137,15 +158,18 @@ def seguir(username):
         return redirect(url_for(home))
     if current_user.seguindo.filter_by(id_seguido=user.id).first():
         flash("Você já segue este usuário.", "info")
-        return redirect(url_for('perfil', username=username))
+        return redirect(request.referrer or url_for('home'))
+
     if current_user.bloqueados.filter_by(id_bloqueado=user.id).first():
         flash("Você bloqueou este usuário. Desbloqueie antes de segui-lo.", "error")
-        return redirect(url_for('perfil', username=username))
+        return redirect(request.referrer or url_for('home'))
+
     seguir_register = Seguir(id_seguidor=current_user.id, id_seguido=user.id)
     db.session.add(seguir_register)
     db.session.commit()
     flash(f"Agora você segue {username}!", "success")
-    return redirect(url_for('perfil', username=username))
+    return redirect(request.referrer or url_for('home'))
+
 
 @app.route('/deixar_de_seguir/<username>', methods=['GET', 'POST'])
 @login_required
@@ -163,7 +187,8 @@ def deixar_de_seguir(username):
         flash(f"Você deixou de seguir {username}.", "info")
     else:
         flash("Você não segue este usuário.", "error")
-    return redirect(url_for('perfil', username=username))
+    return redirect(request.referrer or url_for('home'))
+
 
 @app.route('/perfil/<username>')
 @login_required
@@ -216,39 +241,6 @@ def seguir_usuario(id_usuario):
     # Alterar para usar 'username' em vez de 'id_usuario'
     return redirect(url_for('perfil', username=usuario_a_seguir.username))
 
-@app.route('/curtir_publicacao/<int:publicacao_id>', methods=['POST'])
-@login_required
-def curtir_publicacao(publicacao_id):
-    publicacao = Publicacao.query.get_or_404(publicacao_id)
-    if not publicacao.curtidas.filter_by(id_usuario=current_user.id).first():
-        publicacao.curtir(current_user)
-    return redirect(url_for('perfil', username=publicacao.usuario.username))
-
-
-@app.route('/comentar_publicacao/<int:publicacao_id>', methods=['POST'])
-@login_required
-def comentar_publicacao(publicacao_id):
-    publicacao = Publicacao.query.get_or_404(publicacao_id)
-    texto = request.form.get('texto')
-    publicacao.comentar(current_user, texto)
-    return redirect(url_for('perfil', username=publicacao.usuario.username))
-
-@app.route('/curtir_comentario/<int:comentario_id>', methods=['POST'])
-@login_required
-def curtir_comentario(comentario_id):
-    comentario = Comentario.query.get_or_404(comentario_id)
-    if not comentario.curtidas.filter_by(id_usuario=current_user.id).first():
-        comentario.curtir(current_user)
-    return redirect(url_for('perfil', username=comentario.publicacao.usuario.username))
-
-@app.route('/responder_comentario/<int:comentario_id>', methods=['POST'])
-@login_required
-def responder_comentario(comentario_id):
-    comentario = Comentario.query.get_or_404(comentario_id)
-    texto = request.form.get('texto')
-    comentario.responder(current_user, texto)
-    return redirect(url_for('perfil', username=comentario.publicacao.usuario.username))
-
 @app.route('/adicionar_publicacao', methods=['POST'])
 @login_required
 def adicionar_publicacao():
@@ -257,7 +249,123 @@ def adicionar_publicacao():
         publicacao = Publicacao(texto=texto, usuario_id=current_user.id, data_criacao=datetime.utcnow())
         db.session.add(publicacao)
         db.session.commit()
-    return redirect(url_for('home'))
+    return redirect(request.referrer or url_for('home'))
+
+# Curtir publicação
+@app.route('/curtir/publicacao/<int:publicacao_id>', methods=['POST'])
+@login_required
+def curtir_publicacao(publicacao_id):
+    publicacao = Publicacao.query.get_or_404(publicacao_id)
+    curtida_existente = Curtida.query.filter_by(id_usuario=current_user.id, id_publicacao=publicacao_id).first()
+    if not curtida_existente:
+        nova_curtida = Curtida(id_usuario=current_user.id, id_publicacao=publicacao_id)
+        db.session.add(nova_curtida)
+        db.session.commit()
+    return redirect(request.referrer or url_for('home'))
+
+# Descurtir publicação
+@app.route('/descurtir/publicacao/<int:publicacao_id>', methods=['POST'])
+@login_required
+def descurtir_publicacao(publicacao_id):
+    curtida = Curtida.query.filter_by(id_usuario=current_user.id, id_publicacao=publicacao_id).first()
+    if curtida:
+        db.session.delete(curtida)
+        db.session.commit()
+    publicacao = Publicacao.query.get_or_404(publicacao_id)
+    return redirect(request.referrer or url_for('home'))
+
+@app.route('/deletar/comentario/<int:comentario_id>', methods=['POST'])
+@login_required
+def deletar_comentario(comentario_id):
+    comentario = Comentario.query.get_or_404(comentario_id)
+
+    if comentario.id_usuario != current_user.id:
+        flash("Você não tem permissão para deletar este comentário.", "error")
+        return redirect(request.referrer or url_for('index'))
+
+    db.session.delete(comentario)
+    db.session.commit()
+    flash("Comentário deletado com sucesso.", "success")
+    return redirect(request.referrer or url_for('index'))
+
+@app.route('/deletar/resposta/<int:resposta_id>', methods=['POST'])
+@login_required
+def deletar_resposta(resposta_id):
+    resposta = Resposta.query.get_or_404(resposta_id)
+
+    if resposta.id_usuario != current_user.id:
+        flash("Você não tem permissão para deletar esta resposta.", "error")
+        return redirect(request.referrer or url_for('index'))
+
+    db.session.delete(resposta)
+    db.session.commit()
+    flash("Resposta deletada com sucesso.", "success")
+    return redirect(request.referrer or url_for('index'))
+
+# Curtir comentário
+@app.route('/curtir/comentario/<int:comentario_id>', methods=['POST'])
+@login_required
+def curtir_comentario(comentario_id):
+    comentario = Comentario.query.get_or_404(comentario_id)
+    curtida_existente = Curtida.query.filter_by(id_usuario=current_user.id, id_comentario=comentario_id).first()
+    if not curtida_existente:
+        nova_curtida = Curtida(id_usuario=current_user.id, id_comentario=comentario_id)
+        db.session.add(nova_curtida)
+        db.session.commit()
+    return redirect(request.referrer or url_for('home'))
+
+# Descurtir comentário
+@app.route('/descurtir/comentario/<int:comentario_id>', methods=['POST'])
+@login_required
+def descurtir_comentario(comentario_id):
+    curtida = Curtida.query.filter_by(id_usuario=current_user.id, id_comentario=comentario_id).first()
+    if curtida:
+        db.session.delete(curtida)
+        db.session.commit()
+    comentario = Comentario.query.get_or_404(comentario_id)
+    return redirect(request.referrer or url_for('home'))
+
+# Comentar publicação
+@app.route('/comentar/publicacao/<int:publicacao_id>', methods=['POST'])
+@login_required
+def comentar_publicacao(publicacao_id):
+    texto = request.form.get('texto')
+    if not texto:
+        abort(400)
+    publicacao = Publicacao.query.get_or_404(publicacao_id)
+    novo_comentario = Comentario(texto=texto, usuario_id=current_user.id, publicacao_id=publicacao.id)
+    db.session.add(novo_comentario)
+    db.session.commit()
+    return redirect(request.referrer or url_for('home'))
+
+
+# Responder comentário
+@app.route('/responder/comentario/<int:comentario_id>', methods=['POST'])
+@login_required
+def responder_comentario(comentario_id):
+    texto = request.form.get('texto')
+    if not texto:
+        abort(400)
+    comentario = Comentario.query.get_or_404(comentario_id)
+    resposta = Resposta(texto=texto, id_usuario=current_user.id, id_comentario=comentario.id)
+    db.session.add(resposta)
+    db.session.commit()
+    return redirect(request.referrer or url_for('home'))
+
+@app.route('/deletar/publicacao/<int:publicacao_id>', methods=['POST'])
+@login_required
+def deletar_publicacao(publicacao_id):
+    publicacao = Publicacao.query.get_or_404(publicacao_id)
+    
+    if publicacao.id_usuario != current_user.id:
+        flash("Você não tem permissão para deletar esta publicação.", "error")
+        return redirect(request.referrer or url_for('home'))
+
+    db.session.delete(publicacao)
+    db.session.commit()
+    flash("Publicação deletada com sucesso.", "success")
+    return redirect(request.referrer or url_for('home'))
+
 
 if __name__ == '__main__':
     with app.app_context():

@@ -64,9 +64,20 @@ class Publicacao(db.Model):
     texto = db.Column(db.String(), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     usuario = db.relationship('Usuario', backref='publicacoes', lazy=True)
-    curtidas = db.relationship('Curtida', backref='publicacao', lazy=True)
-    comentarios = db.relationship('Comentario', backref='comentarios_publicacao', lazy=True)
-    data_criacao = db.Column(db.DateTime, nullable=False)
+    comentarios = db.relationship(
+    'Comentario',
+    backref='comentarios_publicacao',
+    lazy=True,
+    cascade='all, delete-orphan'
+    )
+
+    curtidas = db.relationship(
+        'Curtida',
+        backref='publicacao',
+        lazy=True,
+        cascade='all, delete-orphan'
+    )
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, texto, usuario_id, data_criacao=None):
         self.texto = texto
@@ -85,10 +96,15 @@ class Publicacao(db.Model):
         db.session.commit()
 
     def comentar(self, usuario, texto):
-        comentario = Comentario(id_usuario=usuario.id, id_publicacao=self.id, texto=texto)
+        comentario = Comentario(
+            texto=texto,
+            usuario_id=usuario.id,
+            publicacao_id=self.id
+        )
         db.session.add(comentario)
         db.session.commit()
         return comentario
+
 
 
 class Comentario(db.Model):
@@ -100,8 +116,13 @@ class Comentario(db.Model):
     id_publicacao = db.Column(db.Integer, db.ForeignKey('publicacao.id'), nullable=False)
     usuario = db.relationship('Usuario', backref='comentarios', lazy=True)
     publicacao = db.relationship('Publicacao', backref='comentarios_publicacao', lazy=True)  # Relacionamento com publicacao
-    curtidas = db.relationship('Curtida', backref='comentario', lazy=True)
-    respostas = db.relationship('Resposta', backref='comentarios_resposta', lazy=True)  # Mudança aqui
+    curtidas = db.relationship('Curtida', backref='comentario', lazy='dynamic')
+    respostas = db.relationship(
+    'Resposta',
+    backref='comentario_pai',
+    lazy=True,
+    cascade='all, delete-orphan'
+    )
 
     def __init__(self, texto, usuario_id, publicacao_id):
         self.texto = texto
