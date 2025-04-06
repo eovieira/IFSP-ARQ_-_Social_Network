@@ -355,16 +355,7 @@ textarea {
     border-radius: 5px;
 }
 
-a {
-    text-decoration: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-}
 
-a:hover {
-    background-color: #40404037;
-}
 
 form {
     margin: 20px 0;
