@@ -14,8 +14,11 @@
     <title>Página Inicial</title>
     <script>
         // JavaScript para enviar formulário ao clicar no <a>
-        function submitForm(id) {
-            document.getElementById(id).submit();
+        function submitForm(formId) {
+            var form = document.getElementById(formId);
+            if (form) {
+                form.submit();
+            }
         }
     </script>
 </head>
@@ -54,8 +57,9 @@
         <div class="options">
             {% if current_user.is_authenticated %}
             <form action="{{ url_for('adicionar_publicacao') }}" method="POST" class="form-publicar">
-                <textarea name="texto" rows="4" cols="50" placeholder="Escreva sua publicação..."></textarea><br><br>
-                <button class="btn-publicar" onclick="submitForm('form-publicar')">Publicar</button>
+                <input class="comentario" name="texto" rows="4" cols="50"
+                    placeholder="Escreva sua publicação..."></input><br><br>
+                    <button type="submit">Publicar</button>
             </form>
             {% endif %}
         </div>
@@ -64,12 +68,13 @@
             <h2>Publicações Recentes:</h2>
             {% for publicacao in publicacoes %}
             <div class="publicacao">
-                <strong><a class="user" href="{{ url_for('perfil', username=publicacao.usuario.username) }}">{{
-                        publicacao.usuario.username }}</a></strong> - {{ publicacao.texto }}<br>
+                <a class="user" href="{{ url_for('perfil', username=publicacao.usuario.username) }}"><strong>@{{
+                        publicacao.usuario.username }}</strong></a><br>{{ publicacao.texto }}<br>
                 <small>{{ publicacao.data_criacao.strftime('%d/%m/%Y %H:%M') }}</small>
 
                 {% if current_user.is_authenticated %}
-                {% set ja_curtiu_pub = publicacao.curtidas | selectattr('usuario.id', 'equalto', current_user.id) | list
+                {% set ja_curtiu_pub = publicacao.curtidas | selectattr('usuario.id', 'equalto', current_user.id) |
+                list
                 | length > 0 %}
                 <div class="acoes">
                     <form method="POST"
@@ -88,12 +93,11 @@
                     </form>
                     {% endif %}
                     {% endif %}
-
-                    <h4>Comentários:</h4>
+                    <br>
+                    <h5>Comentários:</h5>
                     {% for comentario in publicacao.comentarios %}
                     <div class="comentario">
-                        <strong><a class="user" href="{{ url_for('perfil', username=comentario.usuario.username)}}">{{
-                                comentario.usuario.username }}</a></strong>- {{ comentario.texto }}
+                        <strong><a class="user" href="{{ url_for('perfil', username=comentario.usuario.username)}}">@{{ comentario.usuario.username }}</a></strong> - {{ comentario.texto }}
 
                         {% if current_user.is_authenticated %}
                         {% set ja_curtiu_coment = comentario.curtidas | selectattr('usuario.id', 'equalto',
@@ -101,7 +105,8 @@
                         <form method="POST"
                             action="{{ url_for('descurtir_comentario' if ja_curtiu_coment else 'curtir_comentario', comentario_id=comentario.id) }}"
                             id="curtir-com-{{ comentario.id }}" style="display:inline;">
-                            <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">{{ '❤️
+                            <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">{{
+                                '❤️
                                 Descurtir' if ja_curtiu_coment else '🤍 Curtir' }}</a>
                             <span>{{ comentario.curtidas.count() }} curtidas</span>
                         </form>
@@ -119,7 +124,8 @@
                             {% for resposta in comentario.respostas %}
                             <div class="resposta">
                                 <strong><a href="{{url_for('perfil', username=resposta.usuario.username)}}"
-                                        class="user">{{resposta.usuario.username}}</a></strong>- {{ resposta.texto }}
+                                        class="user">{{resposta.usuario.username}}</a></strong>- {{ resposta.texto
+                                }}
                                 {% if resposta.usuario.id == current_user.id %}
                                 <form method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}"
                                     style="display:inline;" id="delete-resp-{{ resposta.id }}">
@@ -132,8 +138,9 @@
                             {% endfor %}
                         </div>
 
-                        <form method="POST" action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
-                            id="responder-{{ comentario.id }}" style="display:inline;" class="form-resposta">
+                        <form class="form-resposta" method="POST"
+                            action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
+                            id="responder-{{ comentario.id }}" style="display:inline;">
                             <input type="text" name="texto" placeholder="Responder..." required>
                             <button type="submit">Responder</button>
                         </form>
@@ -142,10 +149,11 @@
                     {% endfor %}
 
                     {% if current_user.is_authenticated %}
-                    <form method="POST" action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}"
-                        id="comentar-{{ publicacao.id }}" class="form-comentario">
+                    <form class="form-comentario" method="POST"
+                        action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}"
+                        id="comentar-{{ publicacao.id }}">
                         <input type="text" name="texto" placeholder="Comentar..." required>
-                        <button type="submit">Comentar</button>
+                        <button class="btn-comentar" type="submit">Comentar</button>
                     </form>
                 </div>
                 {% endif %}
@@ -154,6 +162,20 @@
             {% endfor %}
         </div>
     </main>
+    <footer>
+        <ul>
+            <li><a href="https://www.arq.ifsp.edu.br/"><img class="icon"
+                        src="https://www.arq.ifsp.edu.br/images/conteudo/logo_ifsp.png" alt="Site do IFSP"></a>
+            </li>
+            <li><a href="https://suap.ifsp.edu.br/accounts/login/?next=/"><img class="icon"
+                        src="https://play-lh.googleusercontent.com/SPxHi3OAXC4sT0LP2i7VKuvlMJOGS58x4ChB8Tmllj0A3A0jvYuhWAremht02Y6YY30"
+                        alt="SUAP"></a>
+            </li>
+            <li><a href="https://moodle.arq.ifsp.edu.br/login/index.php"><img class="icon"
+                        src="https://www.datocms-assets.com/58969/1688659576-moodle-integration.png" alt="Moodle"></a>
+            </li>
+        </ul>
+    </footer>
 </body>
 
 </html>

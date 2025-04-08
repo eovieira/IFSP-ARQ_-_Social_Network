@@ -1,14 +1,3 @@
-form input[type="text"] {
-    width: 100%;
-    max-width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
 .publicacoes {
     max-width: 800px;
     margin: 20px auto;
@@ -16,10 +5,12 @@ form input[type="text"] {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
 }
 
 .publicacao {
-    margin-bottom: 20px;
+    margin-top: 2.5vh;
+    margin-bottom: 1.5vh;
 }
 
 .topo-publicacao {
@@ -35,7 +26,7 @@ form input[type="text"] {
 .comentario .acoes a,
 .publicacoes .acoes a {
     display: inline-block;
-    margin-right: 10px;
+    margin: 0;
     font-size: 1em;
     /* Mesmo tamanho de fonte do comentário */
     text-decoration: none;
@@ -46,12 +37,13 @@ form input[type="text"] {
 
 .comentario .acoes span,
 .publicacoes .acoes span {
-    margin-left: 5px;
+    margin: 0;
     font-size: 0.9em;
 }
 
 .comentario .acoes a.botao-like,
 .publicacoes .acoes a.botao-like {
+    max-width: 16%;
     color: #333;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -59,16 +51,21 @@ form input[type="text"] {
 
 .comentario .acoes a.botao-deletar,
 .publicacoes .acoes a.botao-deletar {
+    max-width: 14%;
+    float: right;
     color: #e74c3c;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .comentario .acoes a.botao-like:hover,
-.publicacoes .acoes a.botao-like:hover,
+.publicacoes .acoes a.botao-like:hover {
+    color: black;
+}
+
 .comentario .acoes a.botao-deletar:hover,
 .publicacoes .acoes a.botao-deletar:hover {
-    color: #555;
+    color: #a70f0f;
 }
 
 .comentario,
@@ -97,14 +94,43 @@ form input[type="text"] {
     align-items: center;
 }
 
+.form-publicar {
+    display: flex;
+    margin-top: 1.5vh;
+    max-width: 100%;
+}
+
+.form-publicar input {
+    min-width: 50%;
+    max-width: 75%;
+    max-height: 10vh;
+    border: 1px solid #ccc;
+}
+.form-publicar button {
+    margin-top: 2vh;
+    max-height: 10vh;
+    margin-left: 1vh;
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #2980b9;
+    border-radius: 3px;
+}
+
 .form-comentario,
 .form-resposta {
     display: flex;
     margin-top: 15px;
 }
 
+.form-comentario input {
+    min-width: 40%;
+    max-width: 60%;
+}
+
 .form-comentario input,
 .form-resposta input {
+    max-height: 5vh;
     flex-grow: 1;
     padding: 10px;
     font-size: 1em;
@@ -114,10 +140,14 @@ form input[type="text"] {
 
 .form-comentario button,
 .form-resposta button {
-    padding: 10px 15px;
+    padding: 0;
+    margin-top: 1.9vh;
+    margin-left: 1vh;
+    min-width: 20%;
+    height: 5vh;
     font-size: 1em;
-    margin-left: 10px;
     background-color: #3498db;
+    border: 1px solid #2980b9;
     color: white;
     border: none;
     border-radius: 3px;
@@ -137,7 +167,6 @@ form button {
     border: 2px solid #333;
     border-radius: 40px;
     font-size: 1em;
-    color: white;
     transition: .5s ease;
 }
 
@@ -152,6 +181,24 @@ a {
     border-radius: 5px;
 }
 
-a:hover {
-    background-color: #40404037;
+.publicacao .user {
+    animation: none;
+    color: black;
+    text-decoration: none;
+    padding: 0;
+}
+
+.publicacao .user:hover {
+    animation: none;
+    color: #2e2d2d37;
+}
+
+form input[type="text"] {
+    max-width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }

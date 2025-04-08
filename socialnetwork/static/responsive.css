@@ -13,21 +13,65 @@
     }
 
     .form-comentario,
-    .form-resposta {
-        flex-direction: column;
+    .form-resposta,
+    .form-publicar {
+        flex-direction: row;
+    }
+
+    .form-publicar input {
+        margin: 0;
+        width: 70%;
+        max-width: 75%;
+        height: 5vh;
+    }
+    .form-publicar button {
+        margin: 0;
+        width: 20%;
+        max-width: 75%;
+        margin-left: 1vh;
+        height: 5vh;
     }
 
     .form-comentario input,
-    .form-resposta input,
-    .form-comentario button,
-    .form-resposta button {
-        width: 100%;
+    .form-resposta input {
+        width: 70%;
+        max-width: 75%;
         margin-bottom: 10px;
     }
 
     .form-comentario button,
     .form-resposta button {
-        margin-left: 0;
+        margin-top: 2.5%;
+        margin-left: 2.5%;
+        min-width: 25%;
+    }
+
+    .comentario .acoes span,
+    .publicacoes .acoes span {
+        margin: 0;
+        font-size: 0.9em;
+    }
+
+    .comentario .acoes a.botao-like,
+    .publicacoes .acoes a.botao-like {
+        padding: 1.5vh 0  1.5vh 0;
+        font-size: 2.75vw;
+        max-width: 25%;
+        max-height: 20%;
+        color: #333;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .comentario .acoes a.botao-deletar,
+    .publicacoes .acoes a.botao-deletar {
+        max-width: 25%;
+        font-size: 2.75vw;
+        max-height: 20%;
+        float: right;
+        color: #e74c3c;
+        cursor: pointer;
+        transition: color 0.3s ease;
     }
 }
 
@@ -52,7 +96,7 @@
 
 @media (max-width: 480px) {
     .container-box span {
-        display: none;
+        display: auto;
     }
 
     .form-container {

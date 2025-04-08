@@ -6,6 +6,9 @@ from db import db
 import hashlib
 import sqlite3
 from datetime import datetime
+from pytz import timezone
+
+brasilia = timezone('America/Sao_Paulo')
 
 app = Flask(__name__)
 app.secret_key = 'b1b39f3b13f4d82f957ee82b2aff10ae7d5903aa1ab6baa6c77664f667dde823'
@@ -27,14 +30,17 @@ def user_loader(id):
 def home():
     if current_user.is_authenticated:
         seguindo_ids = [rel.id_seguido for rel in current_user.seguindo]
+        bloqueado_ids = [rel.id_bloqueado for rel in current_user.bloqueados]
+        bloqueou_voce_ids = [rel.id_bloqueador for rel in current_user.bloqueado_por]
 
-        # Corrigido: passando o when como argumento posicional
         prioridade_case = case(
             (Publicacao.id_usuario.in_(seguindo_ids), 0),
             else_=1
         )
 
         publicacoes = Publicacao.query \
+            .filter(~Publicacao.id_usuario.in_(bloqueado_ids)) \
+            .filter(~Publicacao.id_usuario.in_(bloqueou_voce_ids)) \
             .order_by(prioridade_case, desc(Publicacao.data_criacao)) \
             .all()
     else:
@@ -197,12 +203,41 @@ def perfil(username):
     if not user:
         flash("Usuário não encontrado", "error")
         return redirect(url_for('home'))
-    
+
     seguindo = user.seguindo.all()
     seguidores = user.seguidores.all()
-    
-    current_user_blocked = current_user in user.bloqueados.all()  # Fui bloqueado
-    current_user_is_blocking = user in current_user.bloqueados.all()  # Eu bloqueei
+
+    # Lista de usuários bloqueados por quem está sendo visitado
+    bloqueados_por_user = {u.id for u in user.bloqueados.all()}
+    # Lista de usuários que o usuário atual bloqueou
+    bloqueados_por_current = {u.id for u in current_user.bloqueados.all()}
+
+    current_user_blocked = current_user.id in bloqueados_por_user
+    current_user_is_blocking = user.id in bloqueados_por_current
+
+    publicacoes = []
+
+    if not current_user_blocked:
+        for pub in user.publicacoes:
+            # Oculta publicações se o autor bloqueou o usuário atual
+            if pub.usuario.id in bloqueados_por_current:
+                continue
+
+            # Cria cópias filtradas dos comentários e respostas
+            comentarios_filtrados = []
+            for comentario in pub.comentarios:
+                if comentario.usuario.id in bloqueados_por_current:
+                    continue
+
+                respostas_filtradas = [
+                    r for r in comentario.respostas
+                    if r.usuario.id not in bloqueados_por_current
+                ]
+                comentario.respostas = respostas_filtradas
+                comentarios_filtrados.append(comentario)
+
+            pub.comentarios = comentarios_filtrados
+            publicacoes.append(pub)
 
     return render_template(
         'utils/perfil.html',
@@ -212,8 +247,10 @@ def perfil(username):
         quantia_seguidores=user.quantia_seguidores,
         quantia_seguindo=user.quantia_seguindo,
         current_user_blocked=current_user_blocked,
-        current_user_is_blocking=current_user_is_blocking
+        current_user_is_blocking=current_user_is_blocking,
+        publicacoes=publicacoes
     )
+
 
 @app.route('/seguir/<int:id_usuario>', methods=['POST'])
 @login_required
@@ -244,7 +281,8 @@ def seguir_usuario(id_usuario):
 def adicionar_publicacao():
     texto = request.form['texto']
     if texto:
-        publicacao = Publicacao(texto=texto, usuario_id=current_user.id, data_criacao=datetime.utcnow())
+        data_brasilia = datetime.now(brasilia)
+        publicacao = Publicacao(texto=texto, usuario_id=current_user.id, data_criacao=data_brasilia)
         db.session.add(publicacao)
         db.session.commit()
     return redirect(request.referrer or url_for('home'))
