@@ -28,7 +28,6 @@
     display: inline-block;
     margin: 0;
     font-size: 1em;
-    /* Mesmo tamanho de fonte do comentário */
     text-decoration: none;
     color: inherit;
     border: none;
@@ -36,23 +35,25 @@
 }
 
 .comentario .acoes span,
-.publicacoes .acoes span {
+.publicacoes .acoes span,
+.respostas .acoes span {
+    font-size: 1vw;
     margin: 0;
-    font-size: 0.9em;
 }
 
 .comentario .acoes a.botao-like,
 .publicacoes .acoes a.botao-like {
-    max-width: 16%;
+    max-width: 5%;
+    max-height: 3%;
     color: #333;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .comentario .acoes a.botao-deletar,
-.publicacoes .acoes a.botao-deletar {
-    max-width: 14%;
-    float: right;
+.publicacoes .acoes a.botao-deletar,
+.respostas .acoes a.botao-deletar {
+    max-width: 5%;
     color: #e74c3c;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -190,7 +191,7 @@ a {
 
 .publicacao .user:hover {
     animation: none;
-    color: #2e2d2d37;
+    color: #2e2d2d;
 }
 
 form input[type="text"] {
@@ -201,4 +202,20 @@ form input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+}
+.like-icon {
+    color: darkgrey;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.like-icon.liked {
+    color: red;
+}
+
+.like-icon:hover {
+    color: darkred;
+}
+.like-icon.liked:hover {
+    color: gray;
 }

@@ -28,7 +28,7 @@
         <div class='container'>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
                 class='logo-img'>
-            <p class='center-title'>Início</p>
+            <p class='center-title'>Tópicos</p>
             <nav>
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
@@ -87,8 +87,8 @@
                                 <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                             {% endif %}
                         </a>
+                        <span>{{ publicacao.curtidas | length }} curtidas</span>
                     </form>
-                    <span>{{ publicacao.curtidas | length }} curtidas</span>
                     {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
                     <form method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}"
                         style="display:inline;" id="delete-pub-{{ publicacao.id }}" style="display:inline;">
@@ -117,9 +117,8 @@
                                     <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                                 {% endif %}
                             </a>
-                            
+                            <span>{{ comentario.curtidas.count() }} curtidas</span>
                         </form>
-                        <span>{{ comentario.curtidas.count() }} curtidas</span>
 
                         {% if comentario.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
                         <form method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}"
@@ -153,8 +152,8 @@
                                         <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                                         {% endif %}
                                     </a>
+                                    <span>{{ resposta.curtidas.count() }} curtidas</span>
                                 </form>
-                                <span>{{ publicacao.curtidas | length }} curtidas</span>
                                 {% endif %}
                         
                                 {% if resposta.usuario.id == current_user.id or current_user.cargo == "Administrador" %}

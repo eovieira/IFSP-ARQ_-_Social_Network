@@ -44,6 +44,8 @@ class Usuario(UserMixin, db.Model):
             return Curtida.query.filter_by(id_usuario=self.id, id_publicacao=item.id).first() is not None
         elif isinstance(item, Comentario):
             return Curtida.query.filter_by(id_usuario=self.id, id_comentario=item.id).first() is not None
+        elif isinstance(item, Resposta):
+            return Curtida.query.filter_by(id_usuario=self.id, id_resposta=item.id).first() is not None
         return False
     
     @property
@@ -169,11 +171,21 @@ class Resposta(db.Model):
 
     usuario = db.relationship('Usuario', backref='respostas', lazy=True)
     comentario = db.relationship('Comentario', backref='comentarios_resposta', lazy=True)
+    
+    curtidas = db.relationship('Curtida', backref='resposta', lazy='dynamic', cascade='all, delete-orphan', foreign_keys='Curtida.id_resposta')
 
     def __init__(self, texto, id_usuario, id_comentario):
         self.texto = texto
         self.id_usuario = id_usuario
         self.id_comentario = id_comentario
+        
+    def curtir(self, usuario):
+        curtida = Curtida(id_usuario=usuario.id, id_resposta=self.id)
+        db.session.add(curtida) 
+        db.session.commit()
+    
+    def listar_curtidas(self):
+        return [curtida.usuario.username for curtida in self.curtidas]
 
 class Curtida(db.Model):
     __tablename__ = 'curtida'
@@ -182,6 +194,7 @@ class Curtida(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_publicacao = db.Column(db.Integer, db.ForeignKey('publicacao.id'), nullable=True)
     id_comentario = db.Column(db.Integer, db.ForeignKey('comentario.id'), nullable=True)
+    id_resposta = db.Column(db.Integer, db.ForeignKey('resposta.id'), nullable=True)
 
     usuario = db.relationship('Usuario', backref='curtidas', lazy=True)
 

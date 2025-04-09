@@ -27,6 +27,7 @@ def user_loader(id):
     return usuario
 
 @app.route('/')
+@login_required
 def home():
     if current_user.is_authenticated:
         seguindo_ids = [rel.id_seguido for rel in current_user.seguindo]
@@ -49,6 +50,31 @@ def home():
             .all()
 
     return render_template('index.html', publicacoes=publicacoes)
+
+@app.route('/topics')
+@login_required
+def topics():
+    if current_user.is_authenticated:
+        seguindo_ids = [rel.id_seguido for rel in current_user.seguindo]
+        bloqueado_ids = [rel.id_bloqueado for rel in current_user.bloqueados]
+        bloqueou_voce_ids = [rel.id_bloqueador for rel in current_user.bloqueado_por]
+
+        prioridade_case = case(
+            (Publicacao.id_usuario.in_(seguindo_ids), 0),
+            else_=1
+        )
+
+        publicacoes = Publicacao.query \
+            .filter(~Publicacao.id_usuario.in_(bloqueado_ids)) \
+            .filter(~Publicacao.id_usuario.in_(bloqueou_voce_ids)) \
+            .order_by(prioridade_case, desc(Publicacao.data_criacao)) \
+            .all()
+    else:
+        publicacoes = Publicacao.query \
+            .order_by(desc(Publicacao.data_criacao)) \
+            .all()
+
+    return render_template('topics.html', publicacoes=publicacoes)
 
 @app.route('/usuarios')
 def usuarios():
