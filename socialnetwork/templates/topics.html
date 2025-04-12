@@ -182,7 +182,7 @@
                         </div>
 
                         <div class="resposta-wrapper" onclick="event.stopPropagation();">
-                            <button class="btn-responder" onclick="mostrarFormulario(event, {{ comentario.id }})"
+                            <button class="btn-responder" onclick="mostrarFormulario(event, '{{ comentario.id }}')"
                                 type="button">
                                 <i class="material-icons reply_all" style="font-size: 20px">reply_all</i>
                             </button>
@@ -204,8 +204,8 @@
 
                     {% if current_user.is_authenticated %}
                     <div class="comentario-wrapper">
-                        <button class="btn-responder" onclick="mostrarFormularioComentario(event, {{ publicacao.id }})"
-                            type="button">
+                        <button class="btn-responder"
+                            onclick="mostrarFormularioComentario(event, '{{ publicacao.id }}')" type="button">
                             <i class="material-icons reply_all" style="font-size: 20px">mode_comment</i>
                         </button>
 

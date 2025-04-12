@@ -6,6 +6,7 @@ function submitForm(formId) {
 }
 function mostrarFormulario(event, comentarioId) {
     event.stopPropagation();
+    comentarioId = parseInt(comentarioId);
 
     const formularios = document.querySelectorAll('.form-resposta');
     formularios.forEach(form => {
@@ -25,6 +26,7 @@ function mostrarFormulario(event, comentarioId) {
 
 function mostrarFormularioComentario(event, publicacaoId) {
     event.stopPropagation();
+    publicacaoId = parseInt(publicacaoId);
 
     const formularios = document.querySelectorAll('.form-comentario');
     formularios.forEach(form => {
