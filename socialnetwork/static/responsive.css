@@ -1,4 +1,4 @@
-@media (max-width: 768px) {
+@media (max-width: 768px) and (min-width: 481px) {
     .container {
         width: 90%;
     }
@@ -24,6 +24,7 @@
         max-width: 75%;
         height: 5vh;
     }
+
     .form-publicar button {
         margin: 0;
         width: 20%;
@@ -54,7 +55,7 @@
 
     .comentario .acoes a.botao-like,
     .publicacoes .acoes a.botao-like {
-        padding: 1.5vh 0  1.5vh 0;
+        padding: 1.5vh 0 1.5vh 0;
         font-size: 2.75vw;
         max-width: 25%;
         max-height: 20%;
@@ -72,6 +73,18 @@
         color: #e74c3c;
         cursor: pointer;
         transition: color 0.3s ease;
+    }
+
+    .botao-opcoes {
+        margin-left: 30vh
+    }
+
+
+}
+
+@media (max-width: 480px) {
+    .botao-opcoes {
+        margin-left: 20vh
     }
 }
 

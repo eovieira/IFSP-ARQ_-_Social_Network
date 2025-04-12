@@ -107,6 +107,7 @@
     max-height: 10vh;
     border: 1px solid #ccc;
 }
+
 .form-publicar button {
     margin-top: 2vh;
     max-height: 10vh;
@@ -144,11 +145,9 @@
     padding: 0;
     margin-top: 1.9vh;
     margin-left: 1vh;
-    min-width: 20%;
+    min-width: 10%;
     height: 5vh;
     font-size: 1em;
-    background-color: #3498db;
-    border: 1px solid #2980b9;
     color: white;
     border: none;
     border-radius: 3px;
@@ -156,10 +155,6 @@
     transition: background-color 0.3s ease;
 }
 
-.form-comentario button:hover,
-.form-resposta button:hover {
-    background-color: #2980b9;
-}
 
 form button {
     padding: 15px 60px;
@@ -203,6 +198,7 @@ form input[type="text"] {
     border-radius: 5px;
     box-sizing: border-box;
 }
+
 .like-icon {
     color: darkgrey;
     cursor: pointer;
@@ -216,6 +212,93 @@ form input[type="text"] {
 .like-icon:hover {
     color: darkred;
 }
+
 .like-icon.liked:hover {
     color: gray;
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+}
+
+.botao-opcoes {
+    margin-left: 80vh;
+}
+
+.btn-responder,
+.btn-comentar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4vh;
+    width: 4vh;
+    padding: 0;
+    margin-right: 1%;
+}
+
+.btn-responder i,
+.btn-comentar i {
+    color: #555;
+    font-size: 2.2vh;
+    transition: color 0.2s ease;
+}
+
+.btn-responder:hover i,
+.btn-comentar:hover i {
+    color: #000;
+}
+
+/* Wrapper do comentário e resposta */
+.comentario-wrapper,
+.resposta-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1%;
+    margin-top: 1vh;
+}
+
+/* Formulário de comentário/resposta */
+.form-comentario,
+.form-resposta {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1%;
+    margin-top: 1vh;
+}
+
+.form-comentario input,
+.form-resposta input {
+    flex: 1;
+    padding: 0.8vh 1vh;
+    border: 1px solid #ccc;
+    border-radius: 1vh;
+    font-size: 1em;
+}
+
+.form-comentario button,
+.form-resposta button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    height: 4vh;
+    width: 4vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-comentario button i,
+.form-resposta button i {
+    font-size: 2.2vh;
+    color: #555;
+}
+
+.form-comentario button:hover i,
+.form-resposta button:hover i {
+    color: #000;
 }
