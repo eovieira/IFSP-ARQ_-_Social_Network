@@ -128,119 +128,152 @@
                     </div>
 
                     {% endif %}
-                    <br>
                     <h5>Comentários:</h5>
                     {% for comentario in publicacao.comentarios %}
+
                     <div class="comentario">
-                        <strong><a class="user" href="{{ url_for('perfil', username=comentario.usuario.username)}}">{{
-                                comentario.usuario.username }}</a>
-                            <br>
-                            <br>
-                        </strong>{{ comentario.texto }}
-                        <br>
+                        <div class="top-comentario">
+                            <a class="user"
+                                href="{{ url_for('perfil', username=comentario.usuario.username)}}"><strong>{{
+                                    comentario.usuario.username }}</strong></a>
 
-                        {% if current_user.is_authenticated %}
-                        {% set ja_curtiu_coment = comentario.curtidas | selectattr('usuario.id', 'equalto',
-                        current_user.id) | list | length > 0 %}
-                        <form method="POST"
-                            action="{{ url_for('descurtir_comentario' if ja_curtiu_coment else 'curtir_comentario', comentario_id=comentario.id) }}"
-                            id="curtir-com-{{ comentario.id }}" style="display:inline;">
-                            <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">
-
-                                {% if ja_curtiu_coment %}
-                                <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
-                                {% else %}
-                                <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
-                                {% endif %}
-                            </a>
-                            <span>{{ comentario.curtidas.count() }} curtidas</span>
-                        </form>
-
-                        <button class="btn-responder" onclick="mostrarFormulario(event, '{{ comentario.id }}')"
-                            type="button">
-                            <i class="material-icons reply_all" style="font-size: 20px">reply_all</i>
-                        </button>
-
-                        {% if comentario.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                        <form method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}"
-                            style="display:inline;" id="delete-com-{{ comentario.id }}" style="display:inline;">
-                            <a href="#"
-                                onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')"
-                                class="botao-deletar"><i class="material-icons" style="font-size: 20px">delete</i></a>
-                        </form>
-                        {% endif %}
-
-                        <div class="respostas">
-                            {% for resposta in comentario.respostas %}
-                            <div class="resposta">
-                                <strong>
-                                    <a href="{{ url_for('perfil', username=resposta.usuario.username) }}" class="user">
-                                        {{ resposta.usuario.username }}
-                                    </a>
-                                </strong>
-                                <br>
-                                <br>
-                                {{ resposta.texto }}
-
-                                {% if current_user.is_authenticated %}
-                                {% set ja_curtiu_resp = resposta.curtidas | selectattr('usuario.id', 'equalto',
-                                current_user.id) | list | length > 0 %}
-                                <form method="POST"
-                                    action="{{ url_for('descurtir_resposta' if ja_curtiu_resp else 'curtir_resposta', resposta_id=resposta.id) }}"
-                                    id="curtir-resp-{{ resposta.id }}" style="display:inline;">
-                                    <br>
-                                    <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')"
-                                        class="botao-like">
-                                        {% if ja_curtiu_resp %}
-                                        <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
-                                        {% else %}
-                                        <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
-                                        {% endif %}
-                                    </a>
-                                    <span>{{ resposta.curtidas.count() }} curtidas</span>
-                                </form>
-
-                                <button onclick="mostrarFormulario(event, '{{ comentario.id }}')"
-                                    class="botao-responder">
-                                    <i class="material-icons reply_all" style="font-size: 20px">reply</i>
+                            <div class="dropdown">
+                                <button class="botao-opcoes" id="botaoOpcoes">
+                                    <i class="material-icons dropdown-toggle" onclick="toggleDropdown(this)"
+                                        style="font-size: 25px; display: inline;">more_vert</i>
                                 </button>
 
-                                {% endif %}
-
-                                {% if resposta.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                                <form method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}"
-                                    style="display:inline;" id="delete-resp-{{ resposta.id }}">
-                                    <a href="#"
-                                        onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
-                                        class="botao-deletar"><i class="material-icons"
-                                            style="font-size: 20px">delete</i></a>
-                                </form>
-                                {% endif %}
+                                <div class="dropdown-menu" id="dropdownMenu">
+                                    <a href="#" style="width: 100%;">Seguir</a>
+                                    <a href="#" style="width: 100%;">Bloquear</a>
+                                    {% if comentario.usuario.id == current_user.id or current_user.cargo ==
+                                    "Administrador" %}
+                                    <form method="POST"
+                                        action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}"
+                                        style="display:inline;" class="form-deletar" id="delete-com-{{ comentario.id }}"
+                                        style="display:inline;">
+                                        <a href="#"
+                                            onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')"
+                                            class="btn-deletar-resposta"><i class="material-icons"
+                                                style="font-size: 20px; color:#e74c3c;">delete</i>Excluir</a>
+                                    </form>
+                                    {% endif %}
+                                </div>
                             </div>
-                            {% endfor %}
+
                         </div>
-
-                        <div class="resposta-wrapper" onclick="event.stopPropagation();">
-
-                            <form class="form-resposta" method="POST"
-                                action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
-                                id="responder-{{ comentario.id }}" style="display:none;">
-
-                                <input type="text" name="texto" placeholder="Responder..." required autofocus />
-                                <button type="submit" class="btn-comentar">
-                                    <i class="material-icons" style="font-size: 20px;">send</i>
-                                </button>
-                            </form>
-                        </div>
-
-                        {% endif %}
                     </div>
-                    {% endfor %}
 
+                    </strong>{{ comentario.texto }}
+                    <br>
+
+                    {% if current_user.is_authenticated %}
+                    {% set ja_curtiu_coment = comentario.curtidas | selectattr('usuario.id', 'equalto',
+                    current_user.id) | list | length > 0 %}
+                    <form method="POST"
+                        action="{{ url_for('descurtir_comentario' if ja_curtiu_coment else 'curtir_comentario', comentario_id=comentario.id) }}"
+                        id="curtir-com-{{ comentario.id }}" style="display:inline;">
+                        <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">
+
+                            {% if ja_curtiu_coment %}
+                            <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                            {% else %}
+                            <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                            {% endif %}
+                        </a>
+                        <span>{{ comentario.curtidas.count() }} curtidas</span>
+                    </form>
+
+                    <button class="btn-responder" onclick="mostrarFormulario(event, '{{ comentario.id }}')"
+                        type="button">
+                        <i class="material-icons reply_all" style="font-size: 20px">reply_all</i>
+                    </button>
+
+                    <div class="respostas">
+                        {% for resposta in comentario.respostas %}
+                        <div class="resposta">
+                            <div class="top-respostas">
+
+                                <a href="{{ url_for('perfil', username=resposta.usuario.username) }}" class="user">
+                                    <strong>{{ resposta.usuario.username }} </strong>
+                                </a>
+
+
+                                <div class="dropdown">
+                                    <button class="botao-opcoes" id="botaoOpcoes">
+                                        <i class="material-icons dropdown-toggle" onclick="toggleDropdown(this)"
+                                            style="font-size: 20px; display: inline;">more_vert</i>
+                                    </button>
+
+                                    <div class="dropdown-menu" id="dropdownMenu">
+                                        <a href="#" style="width: 100%;">Seguir</a>
+                                        <a href="#" style="width: 100%;">Bloquear</a>
+                                        {% if resposta.usuario.id == current_user.id or current_user.cargo ==
+                                        "Administrador" %}
+                                        <form method="POST"
+                                            action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}"
+                                            style="display:inline;" id="delete-resp-{{ resposta.id }}">
+                                            <a href="#"
+                                                onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
+                                                class="botao-deletar"><i class="material-icons"
+                                                    style="font-size: 20px; color:#e74c3c;">delete</i>Excluir</a>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            {{ resposta.texto }}
+
+                            {% if current_user.is_authenticated %}
+                            {% set ja_curtiu_resp = resposta.curtidas | selectattr('usuario.id', 'equalto',
+                            current_user.id) | list | length > 0 %}
+                            <form method="POST"
+                                action="{{ url_for('descurtir_resposta' if ja_curtiu_resp else 'curtir_resposta', resposta_id=resposta.id) }}"
+                                id="curtir-resp-{{ resposta.id }}" style="display:inline;">
+                                <br>
+                                <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')" class="botao-like">
+                                    {% if ja_curtiu_resp %}
+                                    <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                                    {% else %}
+                                    <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                                    {% endif %}
+                                </a>
+                                <span>{{ resposta.curtidas.count() }} curtidas</span>
+                            </form>
+
+                            <button onclick="mostrarFormulario(event, '{{ comentario.id }}')" class="botao-responder">
+                                <i class="material-icons reply_all" style="font-size: 20px">reply</i>
+                            </button>
+
+                            {% endif %}
+
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="resposta-wrapper" onclick="event.stopPropagation();">
+
+                        <form class="form-resposta" method="POST"
+                            action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
+                            id="responder-{{ comentario.id }}" style="display:none;">
+
+                            <input type="text" name="texto" placeholder="Responder..." required autofocus />
+                            <button type="submit" class="btn-comentar">
+                                <i class="material-icons" style="font-size: 20px;">send</i>
+                            </button>
+                        </form>
+                    </div>
+
+                    {% endif %}
                 </div>
-                <hr>
                 {% endfor %}
+
             </div>
+            <hr>
+            {% endfor %}
+        </div>
     </main>
     <footer>
         <ul>

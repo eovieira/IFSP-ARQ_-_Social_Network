@@ -54,7 +54,6 @@
 .comentario .acoes a.botao-deletar,
 .publicacoes .acoes a.botao-deletar,
 .respostas .acoes a.botao-deletar {
-    max-width: 5%;
     color: #e74c3c;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -218,7 +217,9 @@ form input[type="text"] {
     color: gray;
 }
 
-.top-bar {
+.top-bar,
+.top-comentario,
+.top-respostas {
     display: flex;
     align-items: center;
 }
@@ -307,8 +308,6 @@ form input[type="text"] {
     background: none;
     border: none;
     cursor: pointer;
-    width: 5vh;
-    padding: 0;
     overflow: hidden;
 }
 
@@ -319,7 +318,7 @@ form input[type="text"] {
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 8px;
-    min-width: 160px;
+    min-width: 100px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
@@ -327,11 +326,10 @@ form input[type="text"] {
 .dropdown-menu a {
     color: #333;
     padding: 10px 15px;
+    display: flex;
     text-decoration: none;
-    display: block;
     align-items: center;
     justify-content: center;
-    display: flex;
 }
 
 .dropdown-menu a:hover {
