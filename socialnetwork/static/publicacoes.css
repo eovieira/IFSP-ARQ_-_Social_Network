@@ -223,10 +223,6 @@ form input[type="text"] {
     align-items: center;
 }
 
-.botao-opcoes {
-    margin-left: 80vh;
-}
-
 .btn-responder,
 .btn-comentar {
     background: none;
@@ -304,6 +300,7 @@ form input[type="text"] {
 .dropdown {
     position: relative;
     display: inline-block;
+    margin-left: auto;
 }
 
 .dropdown button {
@@ -338,7 +335,7 @@ form input[type="text"] {
 }
 
 .dropdown-menu a:hover {
-    background-color: #f5f5f5;
+    background-color: #cccccc;
 }
 
 .form-deletar a {
@@ -348,5 +345,5 @@ form input[type="text"] {
 
 .form-deletar a:hover {
     color: #a70f0f;
-    background-color: #f5f5f5;
+    background-color: #cccccc;
 }
