@@ -43,3 +43,19 @@ function mostrarFormularioComentario(event, publicacaoId) {
         formulario.style.display = 'none';
     }
 }
+
+function toggleDropdown(button) {
+    const dropdown = button.closest(".dropdown");
+    const menu = dropdown.querySelector(".dropdown-menu");
+
+    document.querySelectorAll(".dropdown-menu").forEach(m => {
+        if (m !== menu) m.style.display = "none";
+    });
+
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+document.addEventListener("click", function (event) {
+    if (!event.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown-menu").forEach(m => m.style.display = "none");
+    }
+});

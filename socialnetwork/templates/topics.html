@@ -64,15 +64,33 @@
                     <a class="user"
                         href="{{ url_for('perfil', username=publicacao.usuario.username) }}"><strong>{{publicacao.usuario.username
                             }}</strong></a>
-                    <a href="#" class="botao-opcoes">
-                        <i class="material-icons more_horiz" style="font-size: 30px; display: inline;">more horiz</i>
-                    </a>
+                    <div class="dropdown">
+                        <button class="botao-opcoes" id="botaoOpcoes">
+                            <i class="material-icons dropdown-toggle" onclick="toggleDropdown(this)"
+                                style="font-size: 30px; display: inline;">more horiz</i>
+                        </button>
+
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="#">Seguir</a>
+                            <a href="#">Bloquear</a>
+                            {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
+                            <form method="POST"
+                                action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}"
+                                style="display:inline;" class="form-deletar" id="delete-pub-{{ publicacao.id }}"
+                                style="display:inline;">
+                                <a href="#"
+                                    onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
+                                    class="botao-deletar"><i class="material-icons"
+                                        style="font-size: 20px">delete</i>Excluir</a>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
                 {{ publicacao.texto }}
                 <br>
                 <small>{{ publicacao.data_criacao.strftime('%d/%m/%Y %H:%M') }}</small>
                 <br>
-
 
                 {% if current_user.is_authenticated %}
                 {% set ja_curtiu_pub = publicacao.curtidas | selectattr('usuario.id', 'equalto', current_user.id) |
@@ -109,15 +127,6 @@
                         </form>
                     </div>
 
-
-                    {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                    <form method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}"
-                        style="display:inline;" id="delete-pub-{{ publicacao.id }}" style="display:inline;">
-                        <a href="#"
-                            onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
-                            class="botao-deletar"><i class="material-icons" style="font-size: 20px">delete</i></a>
-                    </form>
-                    {% endif %}
                     {% endif %}
                     <br>
                     <h5>Comentários:</h5>

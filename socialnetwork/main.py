@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_login import LoginManager, login_user, login_required, login_remembered, logout_user, current_user
 from models import Usuario, Publicacao, Curtida, Comentario, Bloquear, Seguir, Resposta
 from sqlalchemy import case, desc
