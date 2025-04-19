@@ -21,6 +21,7 @@
             }
         }
     </script>
+
 </head>
 
 <body>
@@ -59,7 +60,7 @@
             <form action="{{ url_for('adicionar_publicacao') }}" method="POST" class="form-publicar">
                 <input class="comentario" name="texto" rows="4" cols="50"
                     placeholder="Escreva sua publicação..."></input><br><br>
-                    <button type="submit">Publicar</button>
+                <button type="submit">Publicar</button>
             </form>
             {% endif %}
         </div>
@@ -82,9 +83,9 @@
                         id="curtir-{{ publicacao.id }}" style="display:inline;">
                         <a href="#" onclick="submitForm('curtir-{{ publicacao.id }}')" class="botao-like">
                             {% if ja_curtiu_pub %}
-                                <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
                             {% else %}
-                                <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                             {% endif %}
                         </a>
                     </form>
@@ -102,7 +103,8 @@
                     <h5>Comentários:</h5>
                     {% for comentario in publicacao.comentarios %}
                     <div class="comentario">
-                        <strong><a class="user" href="{{ url_for('perfil', username=comentario.usuario.username)}}">{{ comentario.usuario.username }}</a><br></strong>{{ comentario.texto }}<br>
+                        <strong><a class="user" href="{{ url_for('perfil', username=comentario.usuario.username)}}">{{
+                                comentario.usuario.username }}</a><br></strong>{{ comentario.texto }}<br>
 
                         {% if current_user.is_authenticated %}
                         {% set ja_curtiu_coment = comentario.curtidas | selectattr('usuario.id', 'equalto',
@@ -112,12 +114,12 @@
                             id="curtir-com-{{ comentario.id }}" style="display:inline;">
                             <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">
                                 {% if ja_curtiu_coment %}
-                                    <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                                <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
                                 {% else %}
-                                    <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                                <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                                 {% endif %}
                             </a>
-                            
+
                         </form>
                         <span>{{ comentario.curtidas.count() }} curtidas</span>
 
@@ -139,14 +141,16 @@
                                     </a>
                                 </strong><br>
                                 {{ resposta.texto }}
-                        
+
                                 {% if current_user.is_authenticated %}
-                                {% set ja_curtiu_resp = resposta.curtidas | selectattr('usuario.id', 'equalto', current_user.id) | list | length > 0 %}
+                                {% set ja_curtiu_resp = resposta.curtidas | selectattr('usuario.id', 'equalto',
+                                current_user.id) | list | length > 0 %}
                                 <form method="POST"
-                                      action="{{ url_for('descurtir_resposta' if ja_curtiu_resp else 'curtir_resposta', resposta_id=resposta.id) }}"
-                                      id="curtir-resp-{{ resposta.id }}" style="display:inline;">
-                                      <br>
-                                    <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')" class="botao-like">
+                                    action="{{ url_for('descurtir_resposta' if ja_curtiu_resp else 'curtir_resposta', resposta_id=resposta.id) }}"
+                                    id="curtir-resp-{{ resposta.id }}" style="display:inline;">
+                                    <br>
+                                    <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')"
+                                        class="botao-like">
                                         {% if ja_curtiu_resp %}
                                         <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
                                         {% else %}
@@ -156,18 +160,19 @@
                                 </form>
                                 <span>{{ publicacao.curtidas | length }} curtidas</span>
                                 {% endif %}
-                        
+
                                 {% if resposta.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
                                 <form method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}"
-                                      style="display:inline;" id="delete-resp-{{ resposta.id }}">
+                                    style="display:inline;" id="delete-resp-{{ resposta.id }}">
                                     <a href="#"
-                                       onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
-                                       class="botao-deletar"><i class="material-icons" style="font-size: 20px">delete</i></a>
+                                        onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
+                                        class="botao-deletar"><i class="material-icons"
+                                            style="font-size: 20px">delete</i></a>
                                 </form>
                                 {% endif %}
                             </div>
                             {% endfor %}
-                        </div>                        
+                        </div>
 
                         <form class="form-resposta" method="POST"
                             action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
@@ -208,4 +213,5 @@
         </ul>
     </footer>
 </body>
+
 </html>
