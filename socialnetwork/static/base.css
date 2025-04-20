@@ -1,6 +1,4 @@
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
@@ -11,7 +9,7 @@ body {
     background-color: rgb(235, 235, 235);
 }
 
-.container {
+.top-container {
     width: 80%;
     margin: 0 auto;
 }
@@ -28,8 +26,4 @@ body {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
-}
-
-.body-login {
-    background: linear-gradient(to right, #002050ce, #003061);
 }

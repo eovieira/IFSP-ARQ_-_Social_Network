@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='perfil.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='publicacoes.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -66,16 +65,16 @@
             <p>Seguidores: {{ quantia_seguidores }}, Seguindo: {{ quantia_seguindo }}</p>
 
             {% if user.id != current_user.id %}
-                {% if current_user.seguindo.filter_by(id_seguido=user.id).first() %}
-                    <a href="{{ url_for('deixar_de_seguir', username=user.username) }}" class="botao">Deixar de seguir</a>
-                {% else %}
-                    <a href="{{ url_for('seguir', username=user.username) }}" class="botao">Seguir</a>
-                {% endif %}
-                {% if current_user.bloqueados.filter_by(id_bloqueado=user.id).first() %}
-                    <a href="{{ url_for('desbloquear', username=user.username) }}" class="botao">Desbloquear</a>
-                {% else %}
-                    <a href="{{ url_for('bloquear', username=user.username) }}" class="botao">Bloquear</a>
-                {% endif %}
+            {% if current_user.seguindo.filter_by(id_seguido=user.id).first() %}
+            <a href="{{ url_for('deixar_de_seguir', username=user.username) }}" class="botao">Deixar de seguir</a>
+            {% else %}
+            <a href="{{ url_for('seguir', username=user.username) }}" class="botao">Seguir</a>
+            {% endif %}
+            {% if current_user.bloqueados.filter_by(id_bloqueado=user.id).first() %}
+            <a href="{{ url_for('desbloquear', username=user.username) }}" class="botao">Desbloquear</a>
+            {% else %}
+            <a href="{{ url_for('bloquear', username=user.username) }}" class="botao">Bloquear</a>
+            {% endif %}
             {% endif %}
         </div>
 
@@ -97,17 +96,19 @@
                     style="display:inline;">
                     <a href="#" onclick="this.closest('form').submit();" class="botao-like">
                         {% if current_user.curtiu(publicacao) %}
-                            <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                        <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
                         {% else %}
-                            <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                        <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                         {% endif %}
                     </a>
                 </form>
                 <span>{{ publicacao.curtidas | length }} curtidas</span>
                 {% if publicacao.usuario.id == current_user.id or current_user.cargo == 'Administrador' %}
-                <form class="botao-deletar" method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}"
-                    style="display:inline;">
-                    <a href="#" onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && this.closest('form').submit();" class="botao-deletar">
+                <form class="botao-deletar" method="POST"
+                    action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}" style="display:inline;">
+                    <a href="#"
+                        onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && this.closest('form').submit();"
+                        class="botao-deletar">
                         <i class="material-icons" style="font-size: 20px">delete</i>
                     </a>
                 </form>
@@ -133,17 +134,20 @@
                         style="display:inline;">
                         <a href="#" onclick="this.closest('form').submit();">
                             {% if current_user.curtiu(comentario) %}
-                                <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
                             {% else %}
-                                <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                             {% endif %}
                         </a>
                     </form>
                     <span>{{ comentario.curtidas.count() }} curtidas</span>
                     {% if comentario.usuario.id == current_user.id or current_user.cargo == 'Administrador' %}
-                    <form class="botao-deletar" method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}"
+                    <form class="botao-deletar" method="POST"
+                        action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}"
                         style="display:inline;">
-                        <a href="#" onclick="return confirm('Deseja deletar este comentário?') && this.closest('form').submit();" class="botao-deletar">
+                        <a href="#"
+                            onclick="return confirm('Deseja deletar este comentário?') && this.closest('form').submit();"
+                            class="botao-deletar">
                             <i class="material-icons" style="font-size: 20px">delete</i>
                         </a>
                     </form>
@@ -154,7 +158,8 @@
                     {% for resposta in comentario.respostas %}
                     <div class="resposta">
                         <div class="topo-publicacao">
-                            <img class="icon icon-resposta" src="{{ url_for('static', filename='default_avatar.png') }}" alt="Avatar">
+                            <img class="icon icon-resposta" src="{{ url_for('static', filename='default_avatar.png') }}"
+                                alt="Avatar">
                             <div>
                                 <strong>{{ resposta.usuario.username }}</strong><br>
                                 <small>{{ resposta.data_criacao.strftime('%d %b %Y %H:%M') }}</small>
@@ -167,46 +172,57 @@
                                 style="display:inline;">
                                 <a href="#" onclick="this.closest('form').submit();" class="botao-like">
                                     {% if current_user.curtiu(resposta) %}
-                                        <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                                    <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
                                     {% else %}
-                                        <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                                    <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
                                     {% endif %}
                                 </a>
                             </form>
                             <span>{{ resposta.curtidas.count() }} curtidas</span>
                             {% if resposta.usuario.id == current_user.id or current_user.cargo == 'Administrador' %}
-                            <form class="botao-deletar" method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}" style="display:inline;">
-                                <a href="#" onclick="return confirm('Deseja deletar esta resposta?') && this.closest('form').submit();" class="botao-deletar">
+                            <form class="botao-deletar" method="POST"
+                                action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}"
+                                style="display:inline;">
+                                <a href="#"
+                                    onclick="return confirm('Deseja deletar esta resposta?') && this.closest('form').submit();"
+                                    class="botao-deletar">
                                     <i class="material-icons" style="font-size: 20px">delete</i>
                                 </a>
                             </form>
                             {% endif %}
                         </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
 
-                <form method="POST" action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}" class="form-resposta">
-                    <input type="text" name="texto" placeholder="Responder..." required>
-                    <button type="submit">Responder</button>
+                    <form method="POST" action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
+                        class="form-resposta">
+                        <input type="text" name="texto" placeholder="Responder..." required>
+                        <button type="submit">Responder</button>
+                    </form>
+                </div>
+                <hr>
+                {% endfor %}
+
+                <form method="POST" action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}"
+                    class="form-comentario">
+                    <input type="text" name="texto" placeholder="Escreva um comentário..." required>
+                    <button type="submit">Comentar</button>
                 </form>
             </div>
-            <hr>
             {% endfor %}
-
-            <form method="POST" action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}" class="form-comentario">
-                <input type="text" name="texto" placeholder="Escreva um comentário..." required>
-                <button type="submit">Comentar</button>
-            </form>
-        </div>
-        {% endfor %}
-        {% endif %}
+            {% endif %}
     </main>
 
     <footer>
         <ul>
-            <li><a href="https://www.arq.ifsp.edu.br/"><img class="icon" src="https://www.arq.ifsp.edu.br/images/conteudo/logo_ifsp.png" alt="Site do IFSP"></a></li>
-            <li><a href="https://suap.ifsp.edu.br/accounts/login/?next=/"><img class="icon" src="https://play-lh.googleusercontent.com/SPxHi3OAXC4sT0LP2i7VKuvlMJOGS58x4ChB8Tmllj0A3A0jvYuhWAremht02Y6YY30" alt="SUAP"></a></li>
-            <li><a href="https://moodle.arq.ifsp.edu.br/login/index.php"><img class="icon" src="https://www.datocms-assets.com/58969/1688659576-moodle-integration.png" alt="Moodle"></a></li>
+            <li><a href="https://www.arq.ifsp.edu.br/"><img class="icon"
+                        src="https://www.arq.ifsp.edu.br/images/conteudo/logo_ifsp.png" alt="Site do IFSP"></a></li>
+            <li><a href="https://suap.ifsp.edu.br/accounts/login/?next=/"><img class="icon"
+                        src="https://play-lh.googleusercontent.com/SPxHi3OAXC4sT0LP2i7VKuvlMJOGS58x4ChB8Tmllj0A3A0jvYuhWAremht02Y6YY30"
+                        alt="SUAP"></a></li>
+            <li><a href="https://moodle.arq.ifsp.edu.br/login/index.php"><img class="icon"
+                        src="https://www.datocms-assets.com/58969/1688659576-moodle-integration.png" alt="Moodle"></a>
+            </li>
         </ul>
     </footer>
 </body>
