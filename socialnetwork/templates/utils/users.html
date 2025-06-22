@@ -12,18 +12,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
     <title>Painel de Administrador</title>
 </head>
-
 <body>
     <header class="admin_panel">
-        <div class='container'>
+        <div class='top-container'>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
-                class='logo-img'>
+                class='logo-img' height="50">
             <p class='center-title'>Menu de Usuários</p>
             <nav>
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
                     <li>@{{current_user.nome.lower()}}</li>
-                    <li><a href="{{ url_for('home') }}">Início</a>
+                    <li><a href="{{ url_for('home') }}">Início</a></li>
                     <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
                     {% else %}
                     <li><a href="{{ url_for('login') }}">Fazer login</a></li>
@@ -33,32 +32,45 @@
             </nav>
         </div>
     </header>
+
     <nav class="admin_nav">
-        <div>
+        <div class="top-container">
             <ul class="options">
                 <li class="links"><a href="{{ url_for('admin_panel') }}">Painel de Administrador</a></li>
-                <li class="links"><a href="">Denúncias</a></li>
-                <li class="links"><a href="">Perfil</a></li><!--Padrão para todos os usuários-->
+                <li class="links"><a href="#">Denúncias</a></li>
+                <li class="links"><a href="#">Perfil</a></li>
             </ul>
         </div>
     </nav>
+
     <div class="tabela">
-        <table border="2px">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Nome de usuário</th>
                     <th>Nome de cadastro</th>
                     <th>Cargo</th>
-                    <th>Senha</th>
+                    <th style="width: 80px;">Editar</th>
                 </tr>
             </thead>
             <tbody>
                 {% for usuario in usuarios %}
                 <tr>
                     <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.username }}</td>
                     <td>{{ usuario.nome }}</td>
                     <td>{{ usuario.cargo }}</td>
-                    <td>{{ usuario.senha }}</td>
+                    <td>
+                        <form class="editar-form" id="form-{{ usuario.id }}" action="{{ url_for('editar_cargo', usuario_id=usuario.id) }}" method="post">
+                            <select name="cargo">
+                                <option value="Usuário" {% if usuario.cargo == 'Usuário' %}selected{% endif %}>Usuário</option>
+                                <option value="Administrador" {% if usuario.cargo == 'Administrador' %}selected{% endif %}>Administrador</option>
+                            </select>
+                            <button type="submit" class="editar-salvar">Salvar</button>
+                        </form>
+                        
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

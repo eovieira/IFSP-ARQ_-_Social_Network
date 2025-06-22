@@ -22,16 +22,15 @@
             <nav>
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('perfil', username=current_user.username) }}">@{{
+                    <li><a href="{{ url_for('perfil.perfil', username=current_user.username) }}">@{{
                             current_user.username.lower() }}</a></li>
                     {% if current_user.cargo == 'Administrador' %}
-                    <li><a href="{{ url_for('admin_panel') }}">Painel de administrador</a></li>
+                    <li><a href="{{ url_for('admin.admin_panel') }}">Painel de administrador</a></li>
                     {% endif %}
-                    <li><a class="sair" href="{{ url_for('logout') }}"><i class="material-icons"
+                    <li><a class="sair" href="{{ url_for('auth.logout') }}"><i class="material-icons"
                                 style="font-size: 20px;">logout</i></a></li>
                     {% else %}
-                    <li><a href="{{ url_for('login') }}">Fazer login</a></li>
-                    <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">Fazer login</a></li>
                     {% endif %}
                 </ul>
             </nav>
@@ -47,7 +46,7 @@
 
         <div class="options">
             {% if current_user.is_authenticated %}
-            <form action="{{ url_for('adicionar_publicacao') }}" method="POST" class="form-publicar">
+            <form action="{{ url_for('interacoes.adicionar_publicacao') }}" method="POST" class="form-publicar">
                 <input class="comentario" name="texto" rows="4" cols="50"
                     placeholder="Escreva sua publicação..."></input><br><br>
                 <button type="submit">Publicar</button>
@@ -61,7 +60,7 @@
             <div class="publicacao">
                 <div class="top-bar">
                     <a class="user"
-                        href="{{ url_for('perfil', username=publicacao.usuario.username) }}"><strong>{{publicacao.usuario.username
+                        href="{{ url_for('perfil.perfil', username=publicacao.usuario.username) }}"><strong>{{publicacao.usuario.username
                             }}</strong></a>
                     <div class="dropdown">
                         <button class="botao-opcoes" id="botaoOpcoes">
@@ -75,7 +74,7 @@
                             <a href="#">Denunciar</a>
                             {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
                             <form method="POST"
-                                action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}"
+                                action="{{ url_for('interacoes.deletar_publicacao', publicacao_id=publicacao.id) }}"
                                 style="display:inline;" class="form-deletar" id="delete-pub-{{ publicacao.id }}"
                                 style="display:inline;">
                                 <a href="#"
@@ -98,7 +97,7 @@
                 | length > 0 %}
                 <div class="acoes">
                     <form method="POST"
-                        action="{{ url_for('descurtir_publicacao' if ja_curtiu_pub else 'curtir_publicacao', publicacao_id=publicacao.id) }}"
+                        action="{{ url_for('interacoes.descurtir_publicacao' if ja_curtiu_pub else 'interacoes.curtir_publicacao', publicacao_id=publicacao.id) }}"
                         id="curtir-{{ publicacao.id }}" style="display:inline;">
                         <a href="#" onclick="submitForm('curtir-{{ publicacao.id }}')" class="botao-like">
                             {% if ja_curtiu_pub %}
@@ -118,7 +117,7 @@
                     <div class="comentario-wrapper">
 
                         <form class="form-comentario" method="POST"
-                            action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}"
+                            action="{{ url_for('interacoes.comentar_publicacao', publicacao_id=publicacao.id) }}"
                             id="comentar-{{ publicacao.id }}" style="display: none;">
                             <input type="text" name="texto" placeholder="Comentar..." required />
                             <a class="btn-comentar" type="submit" onclick="this.closest('form').submit()">
@@ -134,7 +133,7 @@
                     <div class="comentario">
                         <div class="top-comentario">
                             <a class="user"
-                                href="{{ url_for('perfil', username=comentario.usuario.username)}}"><strong>{{
+                                href="{{ url_for('perfil.perfil', username=comentario.usuario.username)}}"><strong>{{
                                     comentario.usuario.username }}</strong></a>
 
                             <div class="dropdown">
@@ -150,7 +149,7 @@
                                     {% if comentario.usuario.id == current_user.id or current_user.cargo ==
                                     "Administrador" %}
                                     <form method="POST"
-                                        action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}"
+                                        action="{{ url_for('interacoes.deletar_comentario', comentario_id=comentario.id) }}"
                                         style="display:inline;" class="form-deletar" id="delete-com-{{ comentario.id }}"
                                         style="display:inline;">
                                         <a href="#"
@@ -172,7 +171,7 @@
                         {% set ja_curtiu_coment = comentario.curtidas | selectattr('usuario.id', 'equalto',
                         current_user.id) | list | length > 0 %}
                         <form method="POST"
-                            action="{{ url_for('descurtir_comentario' if ja_curtiu_coment else 'curtir_comentario', comentario_id=comentario.id) }}"
+                            action="{{ url_for('interacoes.descurtir_comentario' if ja_curtiu_coment else 'interacoes.curtir_comentario', comentario_id=comentario.id) }}"
                             id="curtir-com-{{ comentario.id }}" style="display:inline;">
                             <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">
 
@@ -198,7 +197,7 @@
                         <div class="resposta">
                             <div class="top-respostas">
 
-                                <a href="{{ url_for('perfil', username=resposta.usuario.username) }}" class="user">
+                                <a href="{{ url_for('perfil.perfil', username=resposta.usuario.username) }}" class="user">
                                     <strong>{{ resposta.usuario.username }} </strong>
                                 </a>
 
@@ -216,7 +215,7 @@
                                         {% if resposta.usuario.id == current_user.id or current_user.cargo ==
                                         "Administrador" %}
                                         <form method="POST"
-                                            action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}"
+                                            action="{{ url_for('interacoes.deletar_resposta', resposta_id=resposta.id) }}"
                                             style="display:inline;" id="delete-resp-{{ resposta.id }}">
                                             <a href="#"
                                                 onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
@@ -236,7 +235,7 @@
                             {% set ja_curtiu_resp = resposta.curtidas | selectattr('usuario.id', 'equalto',
                             current_user.id) | list | length > 0 %}
                             <form method="POST"
-                                action="{{ url_for('descurtir_resposta' if ja_curtiu_resp else 'curtir_resposta', resposta_id=resposta.id) }}"
+                                action="{{ url_for('interacoes.descurtir_resposta' if ja_curtiu_resp else 'interacoes.curtir_resposta', resposta_id=resposta.id) }}"
                                 id="curtir-resp-{{ resposta.id }}" style="display:inline;">
                                 <br>
                                 <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')" class="botao-like">
@@ -262,7 +261,7 @@
                     <div class="resposta-wrapper" onclick="event.stopPropagation();">
 
                         <form class="form-resposta" method="POST"
-                            action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
+                            action="{{ url_for('interacoes.responder_comentario', comentario_id=comentario.id) }}"
                             id="responder-{{ comentario.id }}" style="display:none;">
 
                             <input type="text" name="texto" placeholder="Responder..." required autofocus />

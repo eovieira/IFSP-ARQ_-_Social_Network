@@ -1,0 +1,135 @@
+from flask import Blueprint, render_template, redirect, url_for, flash, request, g
+from flask_login import login_required, current_user
+from models import Usuario, Publicacao, Seguir, Bloquear
+from db import db
+
+perfil_bp = Blueprint('perfil', __name__)
+
+@perfil_bp.route('/perfil/<username>')
+@login_required
+def perfil(username):
+    user = Usuario.query.filter_by(username=username).first()
+    if not user:
+        flash("Usuário não encontrado", "error")
+        return redirect(url_for('feed.topics'))
+
+    seguindo = user.seguindo.all()
+    seguidores = user.seguidores.all()
+
+    bloqueados_por_user = {u.id for u in user.bloqueados.all()}
+    bloqueados_por_current = {u.id for u in current_user.bloqueados.all()}
+
+    current_user_blocked = current_user.id in bloqueados_por_user
+    current_user_is_blocking = user.id in bloqueados_por_current
+
+    publicacoes = []
+    if not current_user_blocked:
+        for pub in user.publicacoes:
+            if pub.usuario.id in bloqueados_por_current:
+                continue
+
+            comentarios_filtrados = []
+            for comentario in pub.comentarios:
+                if comentario.usuario.id in bloqueados_por_current:
+                    continue
+
+                respostas_filtradas = [
+                    r for r in comentario.respostas
+                    if r.usuario.id not in bloqueados_por_current
+                ]
+                comentario.respostas = respostas_filtradas
+                comentarios_filtrados.append(comentario)
+
+            pub.comentarios = comentarios_filtrados
+            publicacoes.append(pub)
+
+    return render_template('utils/perfil.html', user=user, seguindo=seguindo, seguidores=seguidores,
+                           quantia_seguidores=user.quantia_seguidores,
+                           quantia_seguindo=user.quantia_seguindo,
+                           current_user_blocked=current_user_blocked,
+                           current_user_is_blocking=current_user_is_blocking,
+                           publicacoes=publicacoes)
+
+@perfil_bp.route('/seguir/<username>')
+@login_required
+def seguir(username):
+    user = Usuario.query.filter_by(username=username).first()
+    if not user:
+        flash('Usuário não encontrado', 'error')
+        return redirect(url_for('feed.topics'))
+
+    if current_user.seguindo.filter_by(id_seguido=user.id).first():
+        flash("Você já segue este usuário.", "info")
+        return redirect(request.referrer or url_for('feed.topics'))
+
+    if current_user.bloqueados.filter_by(id_bloqueado=user.id).first():
+        flash("Você bloqueou este usuário. Desbloqueie antes de segui-lo.", "error")
+        return redirect(request.referrer or url_for('feed.topics'))
+
+    seguir_register = Seguir(id_seguidor=current_user.id, id_seguido=user.id)
+    db.session.add(seguir_register)
+    db.session.commit()
+    flash(f"Agora você segue {username}!", "success")
+    return redirect(request.referrer or url_for('feed.topics'))
+
+@perfil_bp.route('/deixar_de_seguir/<username>')
+@login_required
+def deixar_de_seguir(username):
+    user = Usuario.query.filter_by(username=username).first()
+    if not user:
+        flash('Usuário não encontrado', 'error')
+        return redirect(url_for('feed.topics'))
+
+    seguir_register = current_user.seguindo.filter_by(id_seguido=user.id).first()
+    if seguir_register:
+        db.session.delete(seguir_register)
+        db.session.commit()
+        flash(f"Você deixou de seguir {username}.", "info")
+    else:
+        flash("Você não segue este usuário.", "error")
+
+    return redirect(request.referrer or url_for('feed.topics'))
+
+@perfil_bp.route('/bloquear/<username>')
+@login_required
+def bloquear(username):
+    usuario = Usuario.query.filter_by(username=username).first()
+    if not usuario:
+        flash("Usuário não encontrado", "error")
+        return redirect(url_for('feed.topics'))
+
+    if current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first():
+        flash("Você já bloqueou este usuário.", "info")
+        return redirect(request.referrer or url_for('feed.topics'))
+
+    bloquear_registro = Bloquear(id_bloqueador=current_user.id, id_bloqueado=usuario.id)
+
+    seguir_registro = current_user.seguindo.filter_by(id_seguido=usuario.id).first()
+    if seguir_registro:
+        db.session.delete(seguir_registro)
+    seguido_por_ele = usuario.seguindo.filter_by(id_seguido=current_user.id).first()
+    if seguido_por_ele:
+        db.session.delete(seguido_por_ele)
+
+    db.session.add(bloquear_registro)
+    db.session.commit()
+    flash(f"Você bloqueou {username}.", "warning")
+    return redirect(request.referrer or url_for('feed.topics'))
+
+@perfil_bp.route('/desbloquear/<username>')
+@login_required
+def desbloquear(username):
+    usuario = Usuario.query.filter_by(username=username).first()
+    if not usuario:
+        flash("Usuário não encontrado", "error")
+        return redirect(url_for('feed.topics'))
+
+    bloquear_registro = current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first()
+    if bloquear_registro:
+        db.session.delete(bloquear_registro)
+        db.session.commit()
+        flash(f"Você desbloqueou {username}.", "success")
+    else:
+        flash("Este usuário não está bloqueado.", "error")
+
+    return redirect(request.referrer or url_for('feed.topics'))

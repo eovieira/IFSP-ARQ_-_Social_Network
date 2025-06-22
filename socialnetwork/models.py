@@ -157,9 +157,6 @@ class Comentario(db.Model):
     def listar_respostas(self):
         return [resposta.texto for resposta in self.respostas]
 
-
-from datetime import datetime
-
 class Resposta(db.Model):
     __tablename__ = 'resposta'
 
