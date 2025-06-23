@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for, flash, abort, g
+from flask import Blueprint, request, redirect, url_for, flash, abort, g, render_template
 from flask_login import login_required, current_user
 from models import Publicacao, Comentario, Resposta, Curtida
 from db import db
@@ -142,3 +142,9 @@ def deletar_resposta(resposta_id):
     db.session.commit()
     flash("Resposta deletada com sucesso.", "success")
     return redirect(request.referrer or url_for('feed.topics'))
+
+@interacoes_bp.route('/comentarios/<int:publicacao_id>')
+@login_required
+def obter_comentarios(publicacao_id):
+    publicacao = Publicacao.query.get_or_404(publicacao_id)
+    return render_template('partials/comentarios_overlay.html', publicacao=publicacao)

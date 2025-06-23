@@ -1,215 +1,189 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='publicacoes.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Social Network</title>
-    <script>
-        function submitForm(formId) {
-            var form = document.getElementById(formId);
-            if (form) {
-                form.submit();
-            }
+    <title>Modal com Drag</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
+
+        body {
+            font-family: Arial, sans-serif;
+            height: 100dvh;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #abrirModal {
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 999;
+        }
+
+        .modal {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80%;
+            background: white;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(100%);
+            transition: transform 0.4s ease, height 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal.ativo {
+            transform: translateY(0);
+        }
+
+        .modal.saindo {
+            transform: translateY(100%);
+        }
+
+        .barra-drag {
+            width: 100%;
+            padding: 1vh 0;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+        }
+
+        .barra-drag::before {
+            content: '';
+            width: 50%;
+            height: 0.5vh;
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        .fechar {
+            position: absolute;
+            top: 1vh;
+            right: 2vw;
+            font-size: 3rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .conteudo {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        #btnFechar {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <a id="abrirModal">Abrir Modal</a>
+
+    <div class="overlay" id="overlay">
+        <div class="modal" id="modal">
+            <div class="barra-drag" id="barraDrag"></div>
+            <button class="fechar" id="btnFechar">&times;</button>
+            <div class="conteudo">
+                <h2>Modal com Arraste</h2>
+                <p>Arraste a barra para baixo para fechar ou para cima para expandir o modal.</p>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eaque, repellendus!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const btnAbrir = document.getElementById('abrirModal');
+        const overlay = document.getElementById('overlay');
+        const modal = document.getElementById('modal');
+        const btnFechar = document.getElementById('btnFechar');
+        const barraDrag = document.getElementById('barraDrag');
+
+        let startY = null;
+
+        function abrirModal() {
+            overlay.style.display = 'block';
+            modal.style.height = '80%';
+            requestAnimationFrame(() => modal.classList.add('ativo'));
+        }
+
+        function fecharModal() {
+            modal.classList.add('saindo');
+            setTimeout(() => {
+                modal.classList.remove('ativo', 'saindo');
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        btnAbrir.addEventListener('click', abrirModal);
+        btnFechar.addEventListener('click', fecharModal);
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') fecharModal();
+        });
+
+        let dragging = false;
+        let currentY = null;
+
+        function iniciarDrag(y) {
+            startY = y;
+            dragging = true;
+        }
+
+        function movimentarDrag(y) {
+            if (!dragging) return;
+            currentY = y;
+        }
+
+        function finalizarDrag() {
+            if (!dragging || startY === null || currentY === null) {
+                dragging = false;
+                startY = null;
+                currentY = null;
+                return;
+            }
+
+            const diff = currentY - startY;
+
+            if (diff > 80) {
+                fecharModal(); // puxou para baixo → fecha
+            } else if (diff < -80 && modal.style.height === '80%') {
+                modal.style.height = '100%'; // puxou para cima → expande
+            }
+
+            dragging = false;
+            startY = null;
+            currentY = null;
+        }
+
+        // Eventos touch (igual antes)
+        barraDrag.addEventListener('touchstart', e => iniciarDrag(e.touches[0].clientY));
+        barraDrag.addEventListener('touchmove', e => movimentarDrag(e.touches[0].clientY));
+        barraDrag.addEventListener('touchend', e => finalizarDrag());
+
+        // Eventos mouse
+        barraDrag.addEventListener('mousedown', e => iniciarDrag(e.clientY));
+        document.addEventListener('mousemove', e => movimentarDrag(e.clientY));
+        document.addEventListener('mouseup', e => finalizarDrag());
+
     </script>
 
-</head>
-
-<body>
-    <header>
-        <div class='container'>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
-                class='logo-img'>
-            <p class='center-title'>Início</p>
-            <nav>
-                <ul class='menu'>
-                    {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('perfil', username=current_user.username) }}">@{{
-                            current_user.username.lower() }}</a></li>
-                    {% if current_user.cargo == 'Administrador' %}
-                    <li><a href="{{ url_for('admin_panel') }}">Painel de administrador</a></li>
-                    {% endif %}
-                    <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
-                    {% else %}
-                    <li><a href="{{ url_for('login') }}">Fazer login</a></li>
-                    <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        {% if error %}
-        <div class='erro'>
-            <p>{{ error }}</p>
-        </div>
-        {% endif %}
-
-        <div class="options">
-            {% if current_user.is_authenticated %}
-            <form action="{{ url_for('adicionar_publicacao') }}" method="POST" class="form-publicar">
-                <input class="comentario" name="texto" rows="4" cols="50"
-                    placeholder="Escreva sua publicação..."></input><br><br>
-                <button type="submit">Publicar</button>
-            </form>
-            {% endif %}
-        </div>
-
-        <div class="publicacoes">
-            <h2>Tópicos recentes:</h2>
-            {% for publicacao in publicacoes %}
-            <div class="publicacao">
-                <a class="user" href="{{ url_for('perfil', username=publicacao.usuario.username) }}"><strong>{{
-                        publicacao.usuario.username }}</strong></a><br>{{ publicacao.texto }}<br>
-                <small>{{ publicacao.data_criacao.strftime('%d/%m/%Y %H:%M') }}</small>
-
-                {% if current_user.is_authenticated %}
-                {% set ja_curtiu_pub = publicacao.curtidas | selectattr('usuario.id', 'equalto', current_user.id) |
-                list
-                | length > 0 %}
-                <div class="acoes">
-                    <form method="POST"
-                        action="{{ url_for('descurtir_publicacao' if ja_curtiu_pub else 'curtir_publicacao', publicacao_id=publicacao.id) }}"
-                        id="curtir-{{ publicacao.id }}" style="display:inline;">
-                        <a href="#" onclick="submitForm('curtir-{{ publicacao.id }}')" class="botao-like">
-                            {% if ja_curtiu_pub %}
-                            <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
-                            {% else %}
-                            <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
-                            {% endif %}
-                        </a>
-                    </form>
-                    <span>{{ publicacao.curtidas | length }} curtidas</span>
-                    {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                    <form method="POST" action="{{ url_for('deletar_publicacao', publicacao_id=publicacao.id) }}"
-                        style="display:inline;" id="delete-pub-{{ publicacao.id }}" style="display:inline;">
-                        <a href="#"
-                            onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
-                            class="botao-deletar"><i class="material-icons" style="font-size: 1.35rem">delete</i></a>
-                    </form>
-                    {% endif %}
-                    {% endif %}
-                    <br>
-                    <h5>Comentários:</h5>
-                    {% for comentario in publicacao.comentarios %}
-                    <div class="comentario">
-                        <strong><a class="user" href="{{ url_for('perfil', username=comentario.usuario.username)}}">{{
-                                comentario.usuario.username }}</a><br></strong>{{ comentario.texto }}<br>
-
-                        {% if current_user.is_authenticated %}
-                        {% set ja_curtiu_coment = comentario.curtidas | selectattr('usuario.id', 'equalto',
-                        current_user.id) | list | length > 0 %}
-                        <form method="POST"
-                            action="{{ url_for('descurtir_comentario' if ja_curtiu_coment else 'curtir_comentario', comentario_id=comentario.id) }}"
-                            id="curtir-com-{{ comentario.id }}" style="display:inline;">
-                            <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">
-                                {% if ja_curtiu_coment %}
-                                <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
-                                {% else %}
-                                <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
-                                {% endif %}
-                            </a>
-
-                        </form>
-                        <span>{{ comentario.curtidas.count() }} curtidas</span>
-
-                        {% if comentario.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                        <form method="POST" action="{{ url_for('deletar_comentario', comentario_id=comentario.id) }}"
-                            style="display:inline;" id="delete-com-{{ comentario.id }}" style="display:inline;">
-                            <a href="#"
-                                onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')"
-                                class="botao-deletar"><i class="material-icons" style="font-size: 1.35rem">delete</i></a>
-                        </form>
-                        {% endif %}
-
-                        <div class="respostas">
-                            {% for resposta in comentario.respostas %}
-                            <div class="resposta">
-                                <strong>
-                                    <a href="{{ url_for('perfil', username=resposta.usuario.username) }}" class="user">
-                                        {{ resposta.usuario.username }}
-                                    </a>
-                                </strong><br>
-                                {{ resposta.texto }}
-
-                                {% if current_user.is_authenticated %}
-                                {% set ja_curtiu_resp = resposta.curtidas | selectattr('usuario.id', 'equalto',
-                                current_user.id) | list | length > 0 %}
-                                <form method="POST"
-                                    action="{{ url_for('descurtir_resposta' if ja_curtiu_resp else 'curtir_resposta', resposta_id=resposta.id) }}"
-                                    id="curtir-resp-{{ resposta.id }}" style="display:inline;">
-                                    <br>
-                                    <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')"
-                                        class="botao-like">
-                                        {% if ja_curtiu_resp %}
-                                        <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
-                                        {% else %}
-                                        <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
-                                        {% endif %}
-                                    </a>
-                                </form>
-                                <span>{{ publicacao.curtidas | length }} curtidas</span>
-                                {% endif %}
-
-                                {% if resposta.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                                <form method="POST" action="{{ url_for('deletar_resposta', resposta_id=resposta.id) }}"
-                                    style="display:inline;" id="delete-resp-{{ resposta.id }}">
-                                    <a href="#"
-                                        onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
-                                        class="botao-deletar"><i class="material-icons"
-                                            style="font-size: 1.35rem">delete</i></a>
-                                </form>
-                                {% endif %}
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <form class="form-resposta" method="POST"
-                            action="{{ url_for('responder_comentario', comentario_id=comentario.id) }}"
-                            id="responder-{{ comentario.id }}" style="display:inline;">
-                            <input type="text" name="texto" placeholder="Responder..." required>
-                            <button type="submit">Responder</button>
-                        </form>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-
-                    {% if current_user.is_authenticated %}
-                    <form class="form-comentario" method="POST"
-                        action="{{ url_for('comentar_publicacao', publicacao_id=publicacao.id) }}"
-                        id="comentar-{{ publicacao.id }}">
-                        <input type="text" name="texto" placeholder="Comentar..." required>
-                        <button class="btn-comentar" type="submit">Comentar</button>
-                    </form>
-                </div>
-                {% endif %}
-            </div>
-            <hr>
-            {% endfor %}
-        </div>
-    </main>
-    <footer>
-        <ul>
-            <li><a href="https://www.arq.ifsp.edu.br/"><img class="icon"
-                        src="https://www.arq.ifsp.edu.br/images/conteudo/logo_ifsp.png" alt="Site do IFSP"></a>
-            </li>
-            <li><a href="https://suap.ifsp.edu.br/accounts/login/?next=/"><img class="icon"
-                        src="https://play-lh.googleusercontent.com/SPxHi3OAXC4sT0LP2i7VKuvlMJOGS58x4ChB8Tmllj0A3A0jvYuhWAremht02Y6YY30"
-                        alt="SUAP"></a>
-            </li>
-            <li><a href="https://moodle.arq.ifsp.edu.br/login/index.php"><img class="icon"
-                        src="https://www.datocms-assets.com/58969/1688659576-moodle-integration.png" alt="Moodle"></a>
-            </li>
-        </ul>
-    </footer>
 </body>
-
 </html>

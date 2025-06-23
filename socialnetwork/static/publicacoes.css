@@ -86,8 +86,8 @@
     background-color: #f9f9f9;
     padding: 10px;
     margin-top: 10px;
-    border-radius: 5px;
-    border-left: solid 1px black;
+    border-radius: 0 15px;
+    border-left: solid 2px #ccc;
 }
 
 .resposta {
@@ -361,4 +361,27 @@ form input[type="text"] {
 .form-deletar a:hover {
     color: #a70f0f;
     background-color: #cccccc;
+}
+
+.form-publicar textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: inherit;
+    white-space: pre-wrap; /* Isso mantém as quebras de linha */
+    word-wrap: break-word; /* Quebra palavras longas */
+}
+
+.form-publicar textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.texto-publicacao p {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }

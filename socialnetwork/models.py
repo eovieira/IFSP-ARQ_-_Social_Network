@@ -70,7 +70,7 @@ class Publicacao(db.Model):
     __tablename__ = 'publicacao'
 
     id = db.Column(db.Integer, primary_key=True)
-    texto = db.Column(db.String(), nullable=False)
+    texto = db.Column(db.Text, nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     usuario = db.relationship('Usuario', backref='publicacoes', lazy=True)
     comentarios = db.relationship(
@@ -120,7 +120,7 @@ class Comentario(db.Model):
     __tablename__ = 'comentario'
 
     id = db.Column(db.Integer, primary_key=True)
-    texto = db.Column(db.String(), nullable=False)
+    texto = db.Column(db.Text, nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_publicacao = db.Column(db.Integer, db.ForeignKey('publicacao.id'), nullable=False)
     data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # <-- Adicionado aqui
@@ -161,7 +161,7 @@ class Resposta(db.Model):
     __tablename__ = 'resposta'
 
     id = db.Column(db.Integer, primary_key=True)
-    texto = db.Column(db.String(), nullable=False)
+    texto = db.Column(db.Text, nullable=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)  # 🔹 Aqui está o novo campo
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_comentario = db.Column(db.Integer, db.ForeignKey('comentario.id'), nullable=False)
