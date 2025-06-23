@@ -11,7 +11,7 @@
 </head>
 
 <body>
-
+    {% if device == 'desktop' %}
     <div class="container" id="container">
         <div class="form-container login-container">
             <form action="{{ url_for('auth.login') }}" method="post">
@@ -22,14 +22,14 @@
                 <div class="input-box">
                     <input class="inputs" type="password" name="senhaForm" placeholder="Senha" required><br>
                 </div>
+                <button type="submit" value="Login">
+                    Login
+                </button>
                 {% if error %}
                 <div class="error-message">
                     *{{ error }}
                 </div>
                 {% endif %}
-                <button type="submit" value="Login">
-                    Login
-                </button>
                 <span>Veja abaixo outros sites de nossa instituição</span>
                 <div class="social-container">
                     <a href="https://www.arq.ifsp.edu.br/"><img class="icon"
@@ -81,7 +81,7 @@
         <div class="overlay-container">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
-                    <h1 class="title">Bem vindo <br> de volta</h1>
+                    <h1 class="title">Bem-vindo <br> de volta</h1>
                     <p>Caso você tenha uma conta, acesse ela aqui</p>
                     <button class="ghost" id="login">Login</button>
                 </div>
@@ -95,6 +95,27 @@
     </div>
 
     <script src="{{ url_for('static', filename='login.js') }}"></script>
+    {% else %}
+    <div class="container-mobile">
+        <form action="{{ url_for('auth.login') }}" method="post">
+            <h2 class="h2-box">Faça seu login</h2>
+            <div class="input-box">
+                <input class="inputs" type="text" name="usernameForm" placeholder="Nome de usuário" required><br>
+            </div>
+            <div class="input-box">
+                <input class="inputs" type="password" name="senhaForm" placeholder="Senha" required><br>
+            </div>
+            <button type="submit" value="Login">
+                Login
+            </button>
+            {% if error %}
+            <div class="error-message">
+                *{{ error }}
+            </div>
+            {% endif %}
+            <span>Não tem um cadastro? <a href="{{url_for('auth.registrar')}}" method="get">Cadastre-se</a></span>
+        </form>
+    {% endif %}
 
 </body>
 

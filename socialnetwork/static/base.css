@@ -78,3 +78,35 @@ table a {
     color: #012a64ce !important;
     transition: all 0.3s ease-in-out;
 }
+
+.mobile-navbar {
+    display: none;
+}
+@media (max-width: 768px) {
+    .mobile-navbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 8px 0;
+        z-index: 1000;
+    }
+
+    .mobile-navbar .nav-item {
+        color: #333;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 24px;
+    }
+
+    .mobile-navbar .nav-item .material-icons {
+        font-size: 28px;
+    }
+}

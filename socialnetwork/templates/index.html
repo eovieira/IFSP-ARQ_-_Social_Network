@@ -81,9 +81,9 @@
                         id="curtir-{{ publicacao.id }}" style="display:inline;">
                         <a href="#" onclick="submitForm('curtir-{{ publicacao.id }}')" class="botao-like">
                             {% if ja_curtiu_pub %}
-                            <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
                             {% else %}
-                            <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
                             {% endif %}
                         </a>
                     </form>
@@ -93,7 +93,7 @@
                         style="display:inline;" id="delete-pub-{{ publicacao.id }}" style="display:inline;">
                         <a href="#"
                             onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
-                            class="botao-deletar"><i class="material-icons" style="font-size: 20px">delete</i></a>
+                            class="botao-deletar"><i class="material-icons" style="font-size: 1.35rem">delete</i></a>
                     </form>
                     {% endif %}
                     {% endif %}
@@ -112,9 +112,9 @@
                             id="curtir-com-{{ comentario.id }}" style="display:inline;">
                             <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">
                                 {% if ja_curtiu_coment %}
-                                <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                                <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
                                 {% else %}
-                                <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                                <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
                                 {% endif %}
                             </a>
 
@@ -126,7 +126,7 @@
                             style="display:inline;" id="delete-com-{{ comentario.id }}" style="display:inline;">
                             <a href="#"
                                 onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')"
-                                class="botao-deletar"><i class="material-icons" style="font-size: 20px">delete</i></a>
+                                class="botao-deletar"><i class="material-icons" style="font-size: 1.35rem">delete</i></a>
                         </form>
                         {% endif %}
 
@@ -150,9 +150,9 @@
                                     <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')"
                                         class="botao-like">
                                         {% if ja_curtiu_resp %}
-                                        <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                                        <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
                                         {% else %}
-                                        <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                                        <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
                                         {% endif %}
                                     </a>
                                 </form>
@@ -165,7 +165,7 @@
                                     <a href="#"
                                         onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
                                         class="botao-deletar"><i class="material-icons"
-                                            style="font-size: 20px">delete</i></a>
+                                            style="font-size: 1.35rem">delete</i></a>
                                 </form>
                                 {% endif %}
                             </div>

@@ -12,30 +12,33 @@ def hash(texto):
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    device = getattr(g, 'device', 'unknown')
     if request.method == 'GET':
-        return render_template('login.html')
-    
+        return render_template('login.html', device=device)
+            
     username = request.form['usernameForm'].lower()
     senha = request.form['senhaForm']
     user = Usuario.query.filter_by(username=username, senha=hash(senha)).first()
     
     if not user:
-        return render_template('login.html', error="Usuário ou senha incorretos.")
+        return render_template('login.html', device=device)
     
     login_user(user)
     return redirect(url_for('feed.topics'))
 
 @auth_bp.route('/registrar', methods=['GET', 'POST'])
 def registrar():
+    device = getattr(g, 'device', 'unknown')
     if request.method == 'GET':
-        return render_template('registrar.html')
-    
+        if device == 'desktop':
+            return render_template('login.html', device=device)
+        return render_template('registrar.html', device=device)
     username = request.form['usernameForm'].lower()
     nome = request.form['nomeForm']
     senha = request.form['senhaForm']
     
     if Usuario.query.filter_by(username=username).first():
-        return render_template('registrar.html', error="Nome de usuário em uso.")
+        return render_template('registrar.html', error="Nome de usuário em uso.", device=device)
 
     cargo = 'Administrador' if username == 'superadministrador' else 'Usuário'
     novo = Usuario(username=username, nome=nome, senha=hash(senha), cargo=cargo)

@@ -50,7 +50,7 @@
 .comentario .acoes span,
 .publicacoes .acoes span,
 .respostas .acoes span {
-    font-size: 1vw;
+    font-size: 1rem;
     margin: 0;
 }
 

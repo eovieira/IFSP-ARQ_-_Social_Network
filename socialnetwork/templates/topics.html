@@ -14,6 +14,7 @@
 </head>
 
 <body>
+    <div id="topo"></div>
     <header>
         <div class='container'>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Instituto_Federal_de_S%C3%A3o_Paulo_-_Marca_Vertical_2015.svg"
@@ -28,7 +29,7 @@
                     <li><a href="{{ url_for('admin.admin_panel') }}">Painel de administrador</a></li>
                     {% endif %}
                     <li><a class="sair" href="{{ url_for('auth.logout') }}"><i class="material-icons"
-                                style="font-size: 20px;">logout</i></a></li>
+                                style="font-size: 1.35rem;">logout</i></a></li>
                     {% else %}
                     <li><a href="{{ url_for('auth.login') }}">Fazer login</a></li>
                     {% endif %}
@@ -60,8 +61,7 @@
             <div class="publicacao">
                 <div class="top-bar">
                     <a class="user"
-                        href="{{ url_for('perfil.perfil', username=publicacao.usuario.username) }}"><strong>{{publicacao.usuario.username
-                            }}</strong></a>
+                        href="{{ url_for('perfil.perfil', username=publicacao.usuario.username) }}"><strong>{{publicacao.usuario.username}}</strong></a>
                     <div class="dropdown">
                         <button class="botao-opcoes" id="botaoOpcoes">
                             <i class="material-icons dropdown-toggle" onclick="toggleDropdown(this)"
@@ -80,7 +80,7 @@
                                 <a href="#"
                                     onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
                                     class="botao-deletar"><i class="material-icons"
-                                        style="font-size: 20px">delete</i>Excluir</a>
+                                        style="font-size: 1.35rem">delete</i> Excluir</a>
                             </form>
                             {% endif %}
                         </div>
@@ -101,9 +101,9 @@
                         id="curtir-{{ publicacao.id }}" style="display:inline;">
                         <a href="#" onclick="submitForm('curtir-{{ publicacao.id }}')" class="botao-like">
                             {% if ja_curtiu_pub %}
-                            <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
                             {% else %}
-                            <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                            <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
                             {% endif %}
                         </a>
                         <span>{{ publicacao.curtidas | length }} curtidas</span>
@@ -111,7 +111,7 @@
 
                     <button class="btn-responder" onclick="mostrarFormularioComentario(event, '{{ publicacao.id }}')"
                         type="button">
-                        <i class="material-icons reply_all" style="font-size: 20px">mode_comment</i>
+                        <i class="material-icons reply_all" style="font-size: 1.35rem">mode_comment</i>
                     </button>
 
                     <div class="comentario-wrapper">
@@ -121,7 +121,7 @@
                             id="comentar-{{ publicacao.id }}" style="display: none;">
                             <input type="text" name="texto" placeholder="Comentar..." required />
                             <a class="btn-comentar" type="submit" onclick="this.closest('form').submit()">
-                                <i class="material-icons" style="font-size: 20px;">send</i>
+                                <i class="material-icons" style="font-size: 1.35rem;">send</i>
                             </a>
                         </form>
                     </div>
@@ -155,7 +155,7 @@
                                         <a href="#"
                                             onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')"><i
                                                 class="material-icons"
-                                                style="font-size: 20px; color:#e74c3c;">delete</i>Excluir</a>
+                                                style="font-size: 1.35rem; color:#e74c3c;">delete</i>Excluir</a>
                                     </form>
                                     {% endif %}
                                 </div>
@@ -176,9 +176,9 @@
                             <a href="#" onclick="submitForm('curtir-com-{{ comentario.id }}')" class="botao-like">
 
                                 {% if ja_curtiu_coment %}
-                                <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                                <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
                                 {% else %}
-                                <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                                <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
                                 {% endif %}
                             </a>
                             <span>{{ comentario.curtidas.count() }} curtidas</span>
@@ -186,7 +186,7 @@
 
                         <button class="btn-responder" onclick="mostrarFormulario(event, '{{ comentario.id }}')"
                             type="button">
-                            <i class="material-icons reply_all" style="font-size: 20px">reply_all</i>
+                            <i class="material-icons reply_all" style="font-size: 1.35rem">reply_all</i>
                         </button>
                     </div>
 
@@ -205,7 +205,7 @@
                                 <div class="dropdown">
                                     <button class="botao-opcoes" id="botaoOpcoes">
                                         <i class="material-icons dropdown-toggle" onclick="toggleDropdown(this)"
-                                            style="font-size: 20px; display: inline;">more_vert</i>
+                                            style="font-size: 1.35rem; display: inline;">more_vert</i>
                                     </button>
 
                                     <div class="dropdown-menu" id="dropdownMenu">
@@ -220,7 +220,7 @@
                                             <a href="#"
                                                 onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
                                                 class="botao-deletar"><i class="material-icons"
-                                                    style="font-size: 20px; color:#e74c3c;">delete</i>Excluir</a>
+                                                    style="font-size: 1.35rem; color:#e74c3c;">delete</i>Excluir</a>
                                         </form>
                                         {% endif %}
                                     </div>
@@ -240,16 +240,16 @@
                                 <br>
                                 <a href="#" onclick="submitForm('curtir-resp-{{ resposta.id }}')" class="botao-like">
                                     {% if ja_curtiu_resp %}
-                                    <i class="material-icons like-icon liked" style="font-size: 20px">favorite</i>
+                                    <i class="material-icons like-icon liked" style="font-size: 1.35rem">favorite</i>
                                     {% else %}
-                                    <i class="material-icons like-icon" style="font-size: 20px">favorite</i>
+                                    <i class="material-icons like-icon" style="font-size: 1.35rem">favorite</i>
                                     {% endif %}
                                 </a>
                                 <span>{{ resposta.curtidas.count() }} curtidas</span>
                             </form>
 
                             <button onclick="mostrarFormulario(event, '{{ comentario.id }}')" class="botao-responder">
-                                <i class="material-icons reply_all" style="font-size: 20px">reply</i>
+                                <i class="material-icons reply_all" style="font-size: 1.35rem">reply</i>
                             </button>
 
                             {% endif %}
@@ -266,7 +266,7 @@
 
                             <input type="text" name="texto" placeholder="Responder..." required autofocus />
                             <a type="submit" class="btn-comentar" onclick="this.closest('form').submit()">
-                                <i class="material-icons" style="font-size: 20px;">send</i>
+                                <i class="material-icons" style="font-size: 1.35rem;">send</i>
                             </a>
                         </form>
                     </div>
@@ -278,7 +278,25 @@
                 <hr>
                 {% endfor %}
             </div>
+            <div class="mobile-navbar">
+                <a href="{{url_for('feed.topics')}}" class="nav-item">
+                    <span class="material-icons">home</span>
+                </a>
+                <a href="/buscar" class="nav-item">
+                    <span class="material-icons">search</span>
+                </a>
+                <a href="/publicar" class="nav-item">
+                    <span class="material-icons">add_box</span>
+                </a>
+                <a href="/notificacoes" class="nav-item">
+                    <span class="material-icons">favorite</span>
+                </a>
+                <a href="{{url_for('perfil.perfil', username=current_user.username)}}" class="nav-item">
+                    <span class="material-icons">person</span>
+                </a>
+            </div>
     </main>
+    {% if device == 'desktop'%}
     <footer>
         <ul>
             <li><a href="https://www.arq.ifsp.edu.br/"><img class="icon"
@@ -293,6 +311,7 @@
             </li>
         </ul>
     </footer>
+    {% endif %}
 
     <script src="{{ url_for('static', filename='topics.js') }}"></script>
 
