@@ -1,7 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, g
+from flask import Blueprint, render_template, redirect, url_for, flash, request, g, jsonify, current_app
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 from models import Usuario, Publicacao, Seguir, Bloquear
 from db import db
+import os
+import base64
+from PIL import Image
+from io import BytesIO
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 perfil_bp = Blueprint('perfil', __name__)
 
@@ -133,3 +141,51 @@ def desbloquear(username):
         flash("Este usuário não está bloqueado.", "error")
 
     return redirect(request.referrer or url_for('feed.topics'))
+
+@perfil_bp.route('/remover_foto_perfil', methods=['POST'])
+@login_required
+def remover_foto_perfil():
+    # Remova o arquivo se existir
+    import os
+
+    if current_user.foto_perfil:
+        path = os.path.join(current_app.static_folder, 'uploads', current_user.foto_perfil)
+        if os.path.exists(path):
+            os.remove(path)
+        current_user.foto_perfil = None
+        db.session.commit()
+
+    return '', 204
+
+@perfil_bp.route('/salvar_foto_perfil', methods=['POST'])
+@login_required
+def salvar_foto_perfil():
+    data = request.get_json()
+    imagem_base64 = data.get('imagem')
+    if not imagem_base64:
+        return jsonify({'error': 'Nenhuma imagem enviada'}), 400
+
+    # Decodifique a imagem base64, salve em arquivo e atualize o usuário
+    import base64
+    import os
+    from PIL import Image
+    from io import BytesIO
+    import re
+
+    # Extraia dados base64 puro
+    base64_data = re.sub('^data:image/.+;base64,', '', imagem_base64)
+    img_data = base64.b64decode(base64_data)
+    img = Image.open(BytesIO(img_data))
+
+    # Salve a imagem (exemplo: static/uploads/user_{id}.png)
+    filename = f'user_{current_user.id}_perfil.png'
+    path = os.path.join(current_app.static_folder, 'uploads', filename)
+    img.save(path)
+
+    # Atualize o campo do usuário
+    current_user.foto_perfil = filename
+    db.session.commit()
+
+    url = url_for('static', filename='uploads/' + filename)
+
+    return jsonify({'url': url})

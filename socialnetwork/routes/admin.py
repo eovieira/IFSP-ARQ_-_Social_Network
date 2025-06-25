@@ -11,7 +11,7 @@ def admin_panel():
     if current_user.cargo == 'Administrador':
         return render_template('admin_panel.html')
     else:
-        return render_template('index.html', error='Você não tem permissão para isso!')
+        return render_template('topics.html', error='Você não tem permissão para isso!')
 
 @admin_bp.route('/usuarios')
 def usuarios():

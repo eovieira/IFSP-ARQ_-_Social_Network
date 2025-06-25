@@ -203,7 +203,12 @@
                 <hr>
                 {% endfor %}
                 <div class="mobile-navbar">
-                    <a href="{{url_for('feed.topics')}}" class="nav-item">
+                    {% if current_user.cargo == 'Administrador'%}
+                    <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
+                        <span class="material-icons">admin_panel_settings</span>
+                    </a>
+                    {% endif %}
+                        <a href="{{url_for('feed.topics')}}" class="nav-item">
                         <span class="material-icons">home</span>
                     </a>
                     <a href="/buscar" class="nav-item">

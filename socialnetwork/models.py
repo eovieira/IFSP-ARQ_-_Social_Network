@@ -10,6 +10,7 @@ class Usuario(UserMixin, db.Model):
     nome = db.Column(db.String())
     senha = db.Column(db.String())
     cargo = db.Column(db.String())
+    foto_perfil = db.Column(db.String(150), nullable=True)
     
     seguindo = db.relationship(
         'Seguir',

@@ -22,11 +22,10 @@
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
                     <li>@{{current_user.nome.lower()}}</li>
-                    <li><a href="{{ url_for('home') }}">Início</a></li>
-                    <li><a class="sair" href="{{ url_for('logout') }}">Sair</a></li>
+                    <li><a href="{{ url_for('feed.topics') }}">Início</a></li>
+                    <li><a class="sair" href="{{ url_for('auth.logout') }}">Sair</a></li>
                     {% else %}
-                    <li><a href="{{ url_for('login') }}">Fazer login</a></li>
-                    <li><a href="{{ url_for('registrar') }}">Registrar-se</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">Fazer login</a></li>
                     {% endif %}
                 </ul>
             </nav>
@@ -36,7 +35,7 @@
     <nav class="admin_nav">
         <div class="top-container">
             <ul class="options">
-                <li class="links"><a href="{{ url_for('admin_panel') }}">Painel de Administrador</a></li>
+                <li class="links"><a href="{{ url_for('admin.admin_panel') }}">Painel de Administrador</a></li>
                 <li class="links"><a href="#">Denúncias</a></li>
                 <li class="links"><a href="#">Perfil</a></li>
             </ul>
@@ -62,7 +61,7 @@
                     <td>{{ usuario.nome }}</td>
                     <td>{{ usuario.cargo }}</td>
                     <td>
-                        <form class="editar-form" id="form-{{ usuario.id }}" action="{{ url_for('editar_cargo', usuario_id=usuario.id) }}" method="post">
+                        <form class="editar-form" id="form-{{ usuario.id }}" action="{{ url_for('admin.editar_cargo', usuario_id=usuario.id) }}" method="post">
                             <select name="cargo">
                                 <option value="Usuário" {% if usuario.cargo == 'Usuário' %}selected{% endif %}>Usuário</option>
                                 <option value="Administrador" {% if usuario.cargo == 'Administrador' %}selected{% endif %}>Administrador</option>
@@ -76,6 +75,30 @@
             </tbody>
         </table>
     </div>
+    {% if device != 'desktop'%}
+    <div class="mobile-navbar">
+        {% if current_user.cargo == 'Administrador'%}
+        <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
+            <span class="material-icons">admin_panel_settings</span>
+        </a>
+        {% endif %}
+            <a href="{{url_for('feed.topics')}}" class="nav-item">
+            <span class="material-icons">home</span>
+        </a>
+        <a href="/buscar" class="nav-item">
+            <span class="material-icons">search</span>
+        </a>
+        <a href="/publicar" class="nav-item">
+            <span class="material-icons">add_box</span>
+        </a>
+        <a href="/notificacoes" class="nav-item">
+            <span class="material-icons">favorite</span>
+        </a>
+        <a href="{{url_for('perfil.perfil', username=current_user.username)}}" class="nav-item">
+            <span class="material-icons">person</span>
+        </a>
+    </div>
+    {% endif %}
 </body>
 
 </html>

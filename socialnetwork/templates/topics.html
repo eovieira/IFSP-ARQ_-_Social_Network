@@ -50,7 +50,7 @@
                     <li><a href="{{ url_for('perfil.perfil', username=current_user.username) }}">@{{
                             current_user.username.lower() }}</a></li>
                     {% if current_user.cargo == 'Administrador' %}
-                    <li><a href="{{ url_for('admin.admin_panel') }}">Painel de administrador</a></li>
+                    <li><a href="{{ url_for('admin.admin_panel') }}">Admin</a></li>
                     {% endif %}
                     <li><a class="sair" href="{{ url_for('auth.logout') }}"><i class="material-icons"
                                 style="font-size: 1.35rem;">logout</i></a></li>
@@ -315,6 +315,11 @@
             {% endfor %}
             
             <div class="mobile-navbar">
+                {% if current_user.cargo == 'Administrador'%}
+                <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
+                    <span class="material-icons">admin_panel_settings</span>
+                </a>
+                {% endif %}
                 <a href="{{url_for('feed.topics')}}" class="nav-item">
                     <span class="material-icons">home</span>
                 </a>
