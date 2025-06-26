@@ -1,0 +1,82 @@
+.tabela {
+    justify-content: center;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 40dvw;
+    max-width: 80%;
+    max-height: 50%;
+    font-size: 0.75rem;
+}
+
+.tabela-header,
+.tabela-linha {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 0;
+}
+
+.tabela-linha {
+    background-color: #f1f1f1;
+}
+
+.tabela-header {
+    border-radius: 5px 5px 0 0;
+    font-weight: bold;
+    color: white;
+    background-color: #2b92ff;
+}
+
+.celula {
+    flex: 1;
+    padding: 4px 8px;
+    word-break: break-word;
+}
+
+.celula:nth-child(1) {
+    flex: 0.5; /* ID */
+}
+.celula:nth-child(4) {
+    flex: 1.2; /* Editar */
+}
+
+.editar-form {
+    justify-content: center;
+    display: flex; /* Faz os elementos ficarem em coluna */
+    gap: 4px;
+    height: auto; /* Altura automática para acomodar os dois itens */
+}
+
+.editar-form select{
+    width: 50%;
+    height: 2.5vh;
+    background: none;
+    font-size: 0.75rem;
+    border: none;
+}
+
+.editar-form select:hover{
+    cursor: pointer;
+}
+
+.editar-form button {
+    align-self: start; /* ou center */
+    height: 2.5vh; /* opcional */
+    font-size: 0.75rem; /* opcional */
+}
+
+@media (max-width: 768px) {
+    .tabela {
+        width: 100%;
+        max-height: 100%;
+    }
+    .tabela-header {
+        font-size: 0.75rem;
+    }
+    .editar-form {  
+        flex-direction: column;
+    }
+    .editar-form select{
+        width: 100%;
+    }
+}

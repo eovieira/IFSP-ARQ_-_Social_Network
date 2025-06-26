@@ -6,6 +6,8 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    height: 100dvh;
+
     background-color: rgb(235, 235, 235);
 }
 
@@ -26,41 +28,6 @@ body {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
-}
-
-table {
-    margin: 20px auto;
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 10px;
-    width: 50%;
-    max-width: 80%;
-    border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    border: 1px solid #d3d3d3;
-    border-spacing: 0;
-}
-
-table th {
-    background: linear-gradient(to bottom, #002f75ce, #004891);
-    color: white;
-    padding: 10px;
-    text-align: left;
-}
-
-table td {
-    padding: 8px;
-    background-color: #ffffff;
-}
-
-table tr {
-    border-bottom: 1px solid #d3d3d3;
-}
-
-table a {
-    color: #00008b;
-    text-decoration: underline;
 }
 
 .editar-form .editar-salvar {

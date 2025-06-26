@@ -189,3 +189,69 @@ def salvar_foto_perfil():
     url = url_for('static', filename='uploads/' + filename)
 
     return jsonify({'url': url})
+
+@perfil_bp.route('/seguir_ajax/<username>', methods=['POST'])
+@login_required
+def seguir_ajax(username):
+    user = Usuario.query.filter_by(username=username).first_or_404()
+
+    if current_user.bloqueados.filter_by(id_bloqueado=user.id).first():
+        return jsonify({'error': 'Você bloqueou este usuário.'}), 400
+
+    if not current_user.seguindo.filter_by(id_seguido=user.id).first():
+        db.session.add(Seguir(id_seguidor=current_user.id, id_seguido=user.id))
+        db.session.commit()
+
+    return jsonify({
+        'status': 'seguindo',
+        'quantia_seguidores': user.quantia_seguidores,
+        'quantia_seguindo': user.quantia_seguindo
+    })
+
+@perfil_bp.route('/deixar_de_seguir_ajax/<username>', methods=['POST'])
+@login_required
+def deixar_de_seguir_ajax(username):
+    user = Usuario.query.filter_by(username=username).first_or_404()
+    seguir = current_user.seguindo.filter_by(id_seguido=user.id).first()
+    if seguir:
+        db.session.delete(seguir)
+        db.session.commit()
+
+    return jsonify({
+        'status': 'nao_seguindo',
+        'quantia_seguidores': user.quantia_seguidores,
+        'quantia_seguindo': user.quantia_seguindo
+    })
+
+@perfil_bp.route('/bloquear_ajax/<username>', methods=['POST'])
+@login_required
+def bloquear_ajax(username):
+    usuario = Usuario.query.filter_by(username=username).first_or_404()
+
+    if not current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first():
+        bloquear_registro = Bloquear(id_bloqueador=current_user.id, id_bloqueado=usuario.id)
+
+        seguir_registro = current_user.seguindo.filter_by(id_seguido=usuario.id).first()
+        if seguir_registro:
+            db.session.delete(seguir_registro)
+        seguido_por_ele = usuario.seguindo.filter_by(id_seguido=current_user.id).first()
+        if seguido_por_ele:
+            db.session.delete(seguido_por_ele)
+
+        db.session.add(bloquear_registro)
+        db.session.commit()
+
+    return jsonify({'status': 'bloqueado'})
+
+@perfil_bp.route('/desbloquear_ajax/<username>', methods=['POST'])
+@login_required
+def desbloquear_ajax(username):
+    usuario = Usuario.query.filter_by(username=username).first_or_404()
+    bloquear_registro = current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first()
+
+    if bloquear_registro:
+        db.session.delete(bloquear_registro)
+        db.session.commit()
+        return jsonify({'status': 'desbloqueado'})
+    else:
+        return jsonify({'error': 'Usuário não está bloqueado'}), 400

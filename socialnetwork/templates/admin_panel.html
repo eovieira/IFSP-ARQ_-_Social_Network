@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='publicacoes.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Painel de Administrador</title>
 </head>
 
@@ -21,8 +22,7 @@
             <nav>
                 <ul class='menu'>
                     {% if current_user.is_authenticated %}
-                    <li>@{{current_user.nome.lower()}}</li>
-                    <li><a href="{{ url_for('feed.topics') }}">Início</a>
+                    <li><strong>{{current_user.nome}}</strong></li>
                     <li><a class="sair" href="{{ url_for('auth.logout') }}">Sair</a></li>
                     {% else %}
                     <li><a href="{{ url_for('auth.login') }}">Fazer login</a></li>
@@ -43,12 +43,7 @@
     </nav>
     {% if device != 'desktop'%}
     <div class="mobile-navbar">
-        {% if current_user.cargo == 'Administrador'%}
-        <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
-            <span class="material-icons">admin_panel_settings</span>
-        </a>
-        {% endif %}
-            <a href="{{url_for('feed.topics')}}" class="nav-item">
+        <a href="{{url_for('feed.topics')}}" class="nav-item">
             <span class="material-icons">home</span>
         </a>
         <a href="/buscar" class="nav-item">
@@ -63,6 +58,11 @@
         <a href="{{url_for('perfil.perfil', username=current_user.username)}}" class="nav-item">
             <span class="material-icons">person</span>
         </a>
+        {% if current_user.cargo == 'Administrador'%}
+        <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
+            <span class="material-icons">admin_panel_settings</span>
+        </a>
+        {% endif %}
     </div>
     {% endif %}
 </body>

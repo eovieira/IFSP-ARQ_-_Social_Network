@@ -52,8 +52,7 @@
                     {% if current_user.cargo == 'Administrador' %}
                     <li><a href="{{ url_for('admin.admin_panel') }}">Admin</a></li>
                     {% endif %}
-                    <li><a class="sair" href="{{ url_for('auth.logout') }}"><i class="material-icons"
-                                style="font-size: 1.35rem;">logout</i></a></li>
+                    <li><a class="sair" href="{{ url_for('auth.logout') }}"><span class="material-icons">logout</span></a></li>
                     {% else %}
                     <li><a href="{{ url_for('auth.login') }}">Fazer login</a></li>
                     {% endif %}
@@ -94,24 +93,50 @@
                     <div class="dropdown">
                         <button class="botao-opcoes" id="botaoOpcoes">
                             <i class="material-icons dropdown-toggle" onclick="toggleDropdown(this)"
-                                style="font-size: 30px; display: inline;">more_vert</i>
+                                style="font-size: 1.35rem; display: inline;">more_vert</i>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
-                            <a href="#">Seguir</a>
-                            <a href="#">Bloquear</a>
-                            <a href="#">Denunciar</a>
-                            {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                            <form method="POST"
-                                action="{{ url_for('interacoes.deletar_publicacao', publicacao_id=publicacao.id) }}"
-                                style="display:inline;" class="form-deletar" id="delete-pub-{{ publicacao.id }}">
-                                <a href="#"
-                                    onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
-                                    class="botao-deletar">
-                                    <i class="material-icons" style="font-size: 1.35rem">delete</i> Excluir
-                                </a>
-                            </form>
-                            {% endif %}
-                        </div>
+    {% if publicacao.usuario.id != current_user.id %}
+        <!-- Botão seguir/deixar de seguir -->
+        <a href="#" 
+           class="botao botao-seguir" 
+           data-username="{{ publicacao.usuario.username }}"
+           data-acao="{% if current_user.seguindo.filter_by(id_seguido=publicacao.usuario.id).first() %}deixar{% else %}seguir{% endif %}">
+            {% if current_user.seguindo.filter_by(id_seguido=publicacao.usuario.id).first() %}
+                Deixar de seguir
+            {% else %}
+                Seguir
+            {% endif %}
+        </a>
+
+        <!-- Botão bloquear/desbloquear -->
+        <a href="#" 
+           class="botao botao-bloqueio" 
+           data-username="{{ publicacao.usuario.username }}"
+           data-acao="{% if current_user.bloqueados.filter_by(id_bloqueado=publicacao.usuario.id).first() %}desbloquear{% else %}bloquear{% endif %}">
+            {% if current_user.bloqueados.filter_by(id_bloqueado=publicacao.usuario.id).first() %}
+                Desbloquear
+            {% else %}
+                Bloquear
+            {% endif %}
+        </a>
+
+        <a href="#">Denunciar</a>
+    {% endif %}
+
+    {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
+        <form method="POST"
+              action="{{ url_for('interacoes.deletar_publicacao', publicacao_id=publicacao.id) }}"
+              style="display:inline;" class="form-deletar" id="delete-pub-{{ publicacao.id }}">
+            <a href="#"
+               onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
+               class="botao-deletar">
+                <i class="material-icons" style="font-size: 1.35rem">delete</i> Excluir
+            </a>
+        </form>
+    {% endif %}
+</div>
+
                     </div>
                 </div>
                 <div class="texto-publicacao" id="texto-publicacao-{{ publicacao.id }}">
@@ -174,22 +199,33 @@
                         <div class="dropdown">
                             <button class="botao-opcoes" id="botaoOpcoes">
                                 <i class="material-icons dropdown-toggle" onclick="toggleDropdown(this)"
-                                    style="font-size: 25px; display: inline;">more_vert</i>
+                                    style="font-size: 1.35rem; display: inline;">more_vert</i>
                             </button>
                             <div class="dropdown-menu" id="dropdownMenu">
-                                <a href="#" style="width: 100%;">Seguir</a>
-                                <a href="#" style="width: 100%;">Bloquear</a>
-                                <a href="#" style="width: 100%;">Denunciar</a>
-                                {% if comentario.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                                <form method="POST"
-                                    action="{{ url_for('interacoes.deletar_comentario', comentario_id=comentario.id) }}"
-                                    style="display:inline;" class="form-deletar" id="delete-com-{{ comentario.id }}">
-                                    <a href="#"
-                                        onclick="return confirm('Deseja deletar este comentário?') && submitForm('delete-com-{{ comentario.id }}')">
-                                        <i class="material-icons" style="font-size: 1.35rem; color:#e74c3c;">delete</i>Excluir
-                                    </a>
-                                </form>
+                                {% if publicacao.usuario.id != current_user.id %}
+                                {% if current_user.seguindo.filter_by(id_seguido=publicacao.usuario.id).first() %}
+                                    <a href="{{ url_for('perfil.deixar_de_seguir', username=publicacao.usuario.username) }}" class="botao">Deixar de seguir</a>
+                                {% else %}
+                                    <a href="{{ url_for('perfil.seguir', username=publicacao.usuario.username) }}" class="botao">Seguir</a>
                                 {% endif %}
+                                {% if current_user.bloqueados.filter_by(id_bloqueado=publicacao.usuario.id).first() %}
+                                    <a href="{{ url_for('perfil.desbloquear', username=publicacao.usuario.username) }}" class="botao">Desbloquear</a>
+                                {% else %}
+                                    <a href="{{ url_for('perfil.bloquear', username=publicacao.usuario.username) }}" class="botao">Bloquear</a>
+                                {% endif %}
+                                <a href="#">Denunciar</a>
+                            {% endif %}
+                            {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
+                            <form method="POST"
+                                action="{{ url_for('interacoes.deletar_publicacao', publicacao_id=publicacao.id) }}"
+                                style="display:inline;" class="form-deletar" id="delete-pub-{{ publicacao.id }}">
+                                <a href="#"
+                                    onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
+                                    class="botao-deletar">
+                                    <i class="material-icons" style="font-size: 1.35rem">delete</i> Excluir
+                                </a>
+                            </form>
+                            {% endif %}
                             </div>
                         </div>
                     </div>
@@ -245,20 +281,30 @@
                                             style="font-size: 1.35rem; display: inline;">more_vert</i>
                                     </button>
                                     <div class="dropdown-menu" id="dropdownMenu">
-                                        <a href="#" style="width: 100%;">Seguir</a>
-                                        <a href="#" style="width: 100%;">Bloquear</a>
-                                        <a href="#" style="width: 100%;">Denunciar</a>
-                                        {% if resposta.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
-                                        <form method="POST"
-                                            action="{{ url_for('interacoes.deletar_resposta', resposta_id=resposta.id) }}"
-                                            style="display:inline;" id="delete-resp-{{ resposta.id }}">
-                                            <a href="#"
-                                                onclick="return confirm('Deseja deletar esta resposta?') && submitForm('delete-resp-{{ resposta.id }}')"
-                                                class="botao-deletar">
-                                                <i class="material-icons" style="font-size: 1.35rem; color:#e74c3c;">delete</i>Excluir
-                                            </a>
-                                        </form>
+                                        {% if publicacao.usuario.id != current_user.id %}
+                                        {% if current_user.seguindo.filter_by(id_seguido=publicacao.usuario.id).first() %}
+                                            <a href="{{ url_for('perfil.deixar_de_seguir', username=publicacao.usuario.username) }}" class="botao">Deixar de seguir</a>
+                                        {% else %}
+                                            <a href="{{ url_for('perfil.seguir', username=publicacao.usuario.username) }}" class="botao">Seguir</a>
                                         {% endif %}
+                                        {% if current_user.bloqueados.filter_by(id_bloqueado=publicacao.usuario.id).first() %}
+                                            <a href="{{ url_for('perfil.desbloquear', username=publicacao.usuario.username) }}" class="botao">Desbloquear</a>
+                                        {% else %}
+                                            <a href="{{ url_for('perfil.bloquear', username=publicacao.usuario.username) }}" class="botao">Bloquear</a>
+                                        {% endif %}
+                                        <a href="#">Denunciar</a>
+                                    {% endif %}
+                                    {% if publicacao.usuario.id == current_user.id or current_user.cargo == "Administrador" %}
+                                    <form method="POST"
+                                        action="{{ url_for('interacoes.deletar_publicacao', publicacao_id=publicacao.id) }}"
+                                        style="display:inline;" class="form-deletar" id="delete-pub-{{ publicacao.id }}">
+                                        <a href="#"
+                                            onclick="return confirm('Tem certeza que deseja deletar esta publicação?') && submitForm('delete-pub-{{ publicacao.id }}')"
+                                            class="botao-deletar">
+                                            <i class="material-icons" style="font-size: 1.35rem">delete</i> Excluir
+                                        </a>
+                                    </form>
+                                    {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -315,11 +361,6 @@
             {% endfor %}
             
             <div class="mobile-navbar">
-                {% if current_user.cargo == 'Administrador'%}
-                <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
-                    <span class="material-icons">admin_panel_settings</span>
-                </a>
-                {% endif %}
                 <a href="{{url_for('feed.topics')}}" class="nav-item">
                     <span class="material-icons">home</span>
                 </a>
@@ -335,6 +376,11 @@
                 <a href="{{url_for('perfil.perfil', username=current_user.username)}}" class="nav-item">
                     <span class="material-icons">person</span>
                 </a>
+                {% if current_user.cargo == 'Administrador'%}
+                <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
+                    <span class="material-icons">admin_panel_settings</span>
+                </a>
+                {% endif %}
             </div>
         </div>
     </main>
@@ -356,7 +402,8 @@
     </footer>
     {% endif %}
 
-    <script src="{{ url_for('static', filename='topics.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/topics.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
     <script>
         function toggleTextoCompleto(id, tipo = 'publicacao') {
             let elemento;

@@ -312,7 +312,7 @@ form input[type="text"] {
 .form-comentario button:hover i,
 .form-resposta button:hover i,
 .respostas button:hover i {
-    color: #000;
+    color: #333;
 }
 
 .dropdown {
@@ -349,6 +349,13 @@ form input[type="text"] {
     justify-content: center;
 }
 
+.botao-opcoes{
+    color: #555;
+}
+
+.botao-opcoes:hover{
+    color: #333;
+}
 .dropdown-menu a:hover {
     background-color: #cccccc;
 }

@@ -202,28 +202,6 @@
                 </div>
                 <hr>
                 {% endfor %}
-                <div class="mobile-navbar">
-                    {% if current_user.cargo == 'Administrador'%}
-                    <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
-                        <span class="material-icons">admin_panel_settings</span>
-                    </a>
-                    {% endif %}
-                        <a href="{{url_for('feed.topics')}}" class="nav-item">
-                        <span class="material-icons">home</span>
-                    </a>
-                    <a href="/buscar" class="nav-item">
-                        <span class="material-icons">search</span>
-                    </a>
-                    <a href="/publicar" class="nav-item">
-                        <span class="material-icons">add_box</span>
-                    </a>
-                    <a href="/notificacoes" class="nav-item">
-                        <span class="material-icons">favorite</span>
-                    </a>
-                    <a href="{{url_for('perfil.perfil', username=current_user.username)}}" class="nav-item">
-                        <span class="material-icons">person</span>
-                    </a>
-                </div>
                 <form method="POST" action="{{ url_for('interacoes.comentar_publicacao', publicacao_id=publicacao.id) }}"
                     class="form-comentario">
                     <input type="text" name="texto" placeholder="Escreva um comentário..." required>
@@ -232,6 +210,28 @@
             </div>
             {% endfor %}
             {% endif %}
+            <div class="mobile-navbar">
+                <a href="{{url_for('feed.topics')}}" class="nav-item">
+                    <span class="material-icons">home</span>
+                </a>
+                <a href="/buscar" class="nav-item">
+                    <span class="material-icons">search</span>
+                </a>
+                <a href="/publicar" class="nav-item">
+                    <span class="material-icons">add_box</span>
+                </a>
+                <a href="/notificacoes" class="nav-item">
+                    <span class="material-icons">favorite</span>
+                </a>
+                <a href="{{url_for('perfil.perfil', username=current_user.username)}}" class="nav-item">
+                    <span class="material-icons">person</span>
+                </a>
+                {% if current_user.cargo == 'Administrador'%}
+                <a href="{{url_for('admin.admin_panel')}}" class="nav-item">
+                    <span class="material-icons">admin_panel_settings</span>
+                </a>
+                {% endif %}
+            </div>
     </main>
     {% if device == 'desktop' %}
     <footer>
@@ -247,6 +247,7 @@
         </ul>
     </footer>
     {% endif %}
+    <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
 </body>
 
 </html>
