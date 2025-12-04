@@ -1,0 +1,51 @@
+[
+  {
+    "username": "superadministrador",
+    "nome": "Administrador",
+    "senha": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "cargo": "Administrador",
+    "foto_perfil": null,
+    "id": 1
+  },
+  {
+    "username": "usuario1",
+    "nome": "Usu\u00e1rio 1",
+    "senha": "55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251",
+    "cargo": "Usu\u00e1rio",
+    "foto_perfil": null,
+    "id": 2
+  },
+  {
+    "username": "usuario2",
+    "nome": "Usu\u00e1rio 2",
+    "senha": "55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251",
+    "cargo": "Usu\u00e1rio",
+    "foto_perfil": null,
+    "id": 3
+  },
+  {
+    "username": "usuario3",
+    "nome": "Usu\u00e1rio 3",
+    "senha": "55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251",
+    "cargo": "Usu\u00e1rio",
+    "foto_perfil": null,
+    "id": 4
+  },
+  {
+    "username": "vieira",
+    "nome": "Vieira",
+    "senha": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "cargo": "Usu\u00e1rio",
+    "foto_perfil": null,
+    "id": 5
+  },
+  {
+    "username": "v",
+    "email": "v@g",
+    "nome": "v",
+    "senha": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "cargo": "Usu\u00e1rio",
+    "foto_perfil": null,
+    "id": 6
+  }
+]

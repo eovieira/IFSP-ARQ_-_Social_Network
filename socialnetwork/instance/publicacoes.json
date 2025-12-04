@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "texto": "Olá! Esta é minha primeira publicação.",
+    "data_criacao": "2025-12-04T02:44:17.388530-03:00",
+    "id_usuario": 2,
+    "descricao": null
+  },
+  {
+    "id": 2,
+    "texto": "A SPA está funcionando! Que incrível.",
+    "data_criacao": "2025-12-04T02:44:17.388530-03:00",
+    "id_usuario": 3,
+    "descricao": null
+  },
+  {
+    "id": 3,
+    "texto": "Estou aprendendo sobre Single Page Applications.",
+    "data_criacao": "2025-12-04T02:44:17.388530-03:00",
+    "id_usuario": 4,
+    "descricao": null
+  }
+]

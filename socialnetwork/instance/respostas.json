@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "texto": "Muito obrigado!",
+    "data_criacao": "2025-12-04T10:36:00-03:00",
+    "id_usuario": 2,
+    "id_comentario": 1
+  },
+  {
+    "id": 2,
+    "texto": "Realmente é interessante!",
+    "data_criacao": "2025-12-04T10:38:00-03:00",
+    "id_usuario": 3,
+    "id_comentario": 2
+  }
+]

@@ -13,37 +13,61 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 perfil_bp = Blueprint('perfil', __name__)
 
+@perfil_bp.route('/perfil_json/<username>')
+@login_required
+def perfil_json(username):
+    """Retorna dados do perfil em JSON"""
+    user = Usuario.query_by_username(username)
+    if not user:
+        return jsonify({'erro': 'Usuário não encontrado'}), 404
+    
+    seguindo = Seguir.query_by_seguidor(user.id)
+    seguidores = Seguir.query_by_seguido(user.id)
+    bloqueados = Bloquear.query_bloqueador(user.id)
+    
+    return jsonify({
+        'usuario': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'seguindo': [{'id': s.id_seguido, 'username': Usuario.query_by_id(s.id_seguido).username} for s in seguindo],
+            'seguidores': [{'id': s.id_seguidor, 'username': Usuario.query_by_id(s.id_seguidor).username} for s in seguidores],
+            'bloqueados': [{'id': b.id_bloqueado, 'username': Usuario.query_by_id(b.id_bloqueado).username} for b in bloqueados],
+            'publicacoes': [{'id': p.id} for p in Publicacao.query_by_usuario(user.id)]
+        }
+    })
+
 @perfil_bp.route('/perfil/<username>')
 @login_required
 def perfil(username):
-    user = Usuario.query.filter_by(username=username).first()
+    user = Usuario.query_by_username(username)
     if not user:
         flash("Usuário não encontrado", "error")
         return redirect(url_for('feed.topics'))
 
-    seguindo = user.seguindo.all()
-    seguidores = user.seguidores.all()
+    seguindo = Seguir.query_by_seguidor(user.id)
+    seguidores = Seguir.query_by_seguido(user.id)
 
-    bloqueados_por_user = {u.id for u in user.bloqueados.all()}
-    bloqueados_por_current = {u.id for u in current_user.bloqueados.all()}
+    bloqueados_por_user = {b.id_bloqueado for b in Bloquear.query_bloqueador(user.id)}
+    bloqueados_por_current = {b.id_bloqueado for b in Bloquear.query_bloqueador(current_user.id)}
 
     current_user_blocked = current_user.id in bloqueados_por_user
     current_user_is_blocking = user.id in bloqueados_por_current
 
     publicacoes = []
     if not current_user_blocked:
-        for pub in user.publicacoes:
-            if pub.usuario.id in bloqueados_por_current:
+        for pub in Publicacao.query_by_usuario(user.id):
+            if pub.id_usuario in bloqueados_por_current:
                 continue
 
             comentarios_filtrados = []
             for comentario in pub.comentarios:
-                if comentario.usuario.id in bloqueados_por_current:
+                if comentario.id_usuario in bloqueados_por_current:
                     continue
 
                 respostas_filtradas = [
                     r for r in comentario.respostas
-                    if r.usuario.id not in bloqueados_por_current
+                    if r.id_usuario not in bloqueados_por_current
                 ]
                 comentario.respostas = respostas_filtradas
                 comentarios_filtrados.append(comentario)
@@ -61,37 +85,34 @@ def perfil(username):
 @perfil_bp.route('/seguir/<username>')
 @login_required
 def seguir(username):
-    user = Usuario.query.filter_by(username=username).first()
+    user = Usuario.query_by_username(username)
     if not user:
         flash('Usuário não encontrado', 'error')
         return redirect(url_for('feed.topics'))
 
-    if current_user.seguindo.filter_by(id_seguido=user.id).first():
+    if Seguir.query_rel(current_user.id, user.id):
         flash("Você já segue este usuário.", "info")
         return redirect(request.referrer or url_for('feed.topics'))
 
-    if current_user.bloqueados.filter_by(id_bloqueado=user.id).first():
+    if Bloquear.query_rel(current_user.id, user.id):
         flash("Você bloqueou este usuário. Desbloqueie antes de segui-lo.", "error")
         return redirect(request.referrer or url_for('feed.topics'))
 
-    seguir_register = Seguir(id_seguidor=current_user.id, id_seguido=user.id)
-    db.session.add(seguir_register)
-    db.session.commit()
+    Seguir.create(current_user.id, user.id)
     flash(f"Agora você segue {username}!", "success")
     return redirect(request.referrer or url_for('feed.topics'))
 
 @perfil_bp.route('/deixar_de_seguir/<username>')
 @login_required
 def deixar_de_seguir(username):
-    user = Usuario.query.filter_by(username=username).first()
+    user = Usuario.query_by_username(username)
     if not user:
         flash('Usuário não encontrado', 'error')
         return redirect(url_for('feed.topics'))
 
-    seguir_register = current_user.seguindo.filter_by(id_seguido=user.id).first()
+    seguir_register = Seguir.query_rel(current_user.id, user.id)
     if seguir_register:
-        db.session.delete(seguir_register)
-        db.session.commit()
+        seguir_register.delete()
         flash(f"Você deixou de seguir {username}.", "info")
     else:
         flash("Você não segue este usuário.", "error")
@@ -101,41 +122,39 @@ def deixar_de_seguir(username):
 @perfil_bp.route('/bloquear/<username>')
 @login_required
 def bloquear(username):
-    usuario = Usuario.query.filter_by(username=username).first()
+    usuario = Usuario.query_by_username(username)
     if not usuario:
         flash("Usuário não encontrado", "error")
         return redirect(url_for('feed.topics'))
 
-    if current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first():
+    if Bloquear.query_rel(current_user.id, usuario.id):
         flash("Você já bloqueou este usuário.", "info")
         return redirect(request.referrer or url_for('feed.topics'))
 
-    bloquear_registro = Bloquear(id_bloqueador=current_user.id, id_bloqueado=usuario.id)
+    bloquear_registro = Bloquear.create(current_user.id, usuario.id)
 
-    seguir_registro = current_user.seguindo.filter_by(id_seguido=usuario.id).first()
+    seguir_registro = Seguir.query_rel(current_user.id, usuario.id)
     if seguir_registro:
-        db.session.delete(seguir_registro)
-    seguido_por_ele = usuario.seguindo.filter_by(id_seguido=current_user.id).first()
+        seguir_registro.delete()
+    
+    seguido_por_ele = Seguir.query_rel(usuario.id, current_user.id)
     if seguido_por_ele:
-        db.session.delete(seguido_por_ele)
+        seguido_por_ele.delete()
 
-    db.session.add(bloquear_registro)
-    db.session.commit()
     flash(f"Você bloqueou {username}.", "warning")
     return redirect(request.referrer or url_for('feed.topics'))
 
 @perfil_bp.route('/desbloquear/<username>')
 @login_required
 def desbloquear(username):
-    usuario = Usuario.query.filter_by(username=username).first()
+    usuario = Usuario.query_by_username(username)
     if not usuario:
         flash("Usuário não encontrado", "error")
         return redirect(url_for('feed.topics'))
 
-    bloquear_registro = current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first()
+    bloquear_registro = Bloquear.query_rel(current_user.id, usuario.id)
     if bloquear_registro:
-        db.session.delete(bloquear_registro)
-        db.session.commit()
+        bloquear_registro.delete()
         flash(f"Você desbloqueou {username}.", "success")
     else:
         flash("Este usuário não está bloqueado.", "error")
@@ -145,15 +164,12 @@ def desbloquear(username):
 @perfil_bp.route('/remover_foto_perfil', methods=['POST'])
 @login_required
 def remover_foto_perfil():
-    # Remova o arquivo se existir
-    import os
-
     if current_user.foto_perfil:
         path = os.path.join(current_app.static_folder, 'uploads', current_user.foto_perfil)
         if os.path.exists(path):
             os.remove(path)
         current_user.foto_perfil = None
-        db.session.commit()
+        current_user.save()
 
     return '', 204
 
@@ -165,26 +181,22 @@ def salvar_foto_perfil():
     if not imagem_base64:
         return jsonify({'error': 'Nenhuma imagem enviada'}), 400
 
-    # Decodifique a imagem base64, salve em arquivo e atualize o usuário
-    import base64
-    import os
+    import re
     from PIL import Image
     from io import BytesIO
-    import re
 
-    # Extraia dados base64 puro
     base64_data = re.sub('^data:image/.+;base64,', '', imagem_base64)
     img_data = base64.b64decode(base64_data)
     img = Image.open(BytesIO(img_data))
 
-    # Salve a imagem (exemplo: static/uploads/user_{id}.png)
     filename = f'user_{current_user.id}_perfil.png'
     path = os.path.join(current_app.static_folder, 'uploads', filename)
+    
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     img.save(path)
 
-    # Atualize o campo do usuário
     current_user.foto_perfil = filename
-    db.session.commit()
+    current_user.save()
 
     url = url_for('static', filename='uploads/' + filename)
 
@@ -193,14 +205,15 @@ def salvar_foto_perfil():
 @perfil_bp.route('/seguir_ajax/<username>', methods=['POST'])
 @login_required
 def seguir_ajax(username):
-    user = Usuario.query.filter_by(username=username).first_or_404()
+    user = Usuario.query_by_username(username)
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado'}), 404
 
-    if current_user.bloqueados.filter_by(id_bloqueado=user.id).first():
+    if Bloquear.query_rel(current_user.id, user.id):
         return jsonify({'error': 'Você bloqueou este usuário.'}), 400
 
-    if not current_user.seguindo.filter_by(id_seguido=user.id).first():
-        db.session.add(Seguir(id_seguidor=current_user.id, id_seguido=user.id))
-        db.session.commit()
+    if not Seguir.query_rel(current_user.id, user.id):
+        Seguir.create(current_user.id, user.id)
 
     return jsonify({
         'status': 'seguindo',
@@ -211,11 +224,13 @@ def seguir_ajax(username):
 @perfil_bp.route('/deixar_de_seguir_ajax/<username>', methods=['POST'])
 @login_required
 def deixar_de_seguir_ajax(username):
-    user = Usuario.query.filter_by(username=username).first_or_404()
-    seguir = current_user.seguindo.filter_by(id_seguido=user.id).first()
+    user = Usuario.query_by_username(username)
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado'}), 404
+    
+    seguir = Seguir.query_rel(current_user.id, user.id)
     if seguir:
-        db.session.delete(seguir)
-        db.session.commit()
+        seguir.delete()
 
     return jsonify({
         'status': 'nao_seguindo',
@@ -226,32 +241,34 @@ def deixar_de_seguir_ajax(username):
 @perfil_bp.route('/bloquear_ajax/<username>', methods=['POST'])
 @login_required
 def bloquear_ajax(username):
-    usuario = Usuario.query.filter_by(username=username).first_or_404()
+    usuario = Usuario.query_by_username(username)
+    if not usuario:
+        return jsonify({'error': 'Usuário não encontrado'}), 404
 
-    if not current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first():
-        bloquear_registro = Bloquear(id_bloqueador=current_user.id, id_bloqueado=usuario.id)
+    if not Bloquear.query_rel(current_user.id, usuario.id):
+        Bloquear.create(current_user.id, usuario.id)
 
-        seguir_registro = current_user.seguindo.filter_by(id_seguido=usuario.id).first()
+        seguir_registro = Seguir.query_rel(current_user.id, usuario.id)
         if seguir_registro:
-            db.session.delete(seguir_registro)
-        seguido_por_ele = usuario.seguindo.filter_by(id_seguido=current_user.id).first()
+            seguir_registro.delete()
+        
+        seguido_por_ele = Seguir.query_rel(usuario.id, current_user.id)
         if seguido_por_ele:
-            db.session.delete(seguido_por_ele)
-
-        db.session.add(bloquear_registro)
-        db.session.commit()
+            seguido_por_ele.delete()
 
     return jsonify({'status': 'bloqueado'})
 
 @perfil_bp.route('/desbloquear_ajax/<username>', methods=['POST'])
 @login_required
 def desbloquear_ajax(username):
-    usuario = Usuario.query.filter_by(username=username).first_or_404()
-    bloquear_registro = current_user.bloqueados.filter_by(id_bloqueado=usuario.id).first()
+    usuario = Usuario.query_by_username(username)
+    if not usuario:
+        return jsonify({'error': 'Usuário não encontrado'}), 404
+    
+    bloquear_registro = Bloquear.query_rel(current_user.id, usuario.id)
 
     if bloquear_registro:
-        db.session.delete(bloquear_registro)
-        db.session.commit()
+        bloquear_registro.delete()
         return jsonify({'status': 'desbloqueado'})
     else:
         return jsonify({'error': 'Usuário não está bloqueado'}), 400

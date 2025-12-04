@@ -1,0 +1,38 @@
+[
+  {
+    "username": "superadministrador",
+    "nome": "Administrador",
+    "senha": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "cargo": "Administrador",
+    "foto_perfil": null,
+    "id": 1,
+    "email": "superadministrador@socialnetwork.com"
+  },
+  {
+    "username": "usuario1",
+    "nome": "Usuário 1",
+    "senha": "55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251",
+    "cargo": "Usuário",
+    "foto_perfil": null,
+    "id": 2,
+    "email": "usuario1@socialnetwork.com"
+  },
+  {
+    "username": "usuario2",
+    "nome": "Usuário 2",
+    "senha": "55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251",
+    "cargo": "Usuário",
+    "foto_perfil": null,
+    "id": 3,
+    "email": "usuario2@socialnetwork.com"
+  },
+  {
+    "username": "usuario3",
+    "nome": "Usuário 3",
+    "senha": "55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251",
+    "cargo": "Usuário",
+    "foto_perfil": null,
+    "id": 4,
+    "email": "usuario3@socialnetwork.com"
+  }
+]

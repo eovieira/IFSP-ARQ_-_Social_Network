@@ -1,0 +1,16 @@
+[
+  {
+    "id_usuario": 5,
+    "id_publicacao": 1,
+    "id_comentario": null,
+    "id_resposta": null,
+    "id": 1
+  },
+  {
+    "id_usuario": 5,
+    "id_publicacao": 2,
+    "id_comentario": null,
+    "id_resposta": null,
+    "id": 2
+  }
+]
